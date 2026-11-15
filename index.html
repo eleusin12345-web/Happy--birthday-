@@ -1,0 +1,4305 @@
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>С Днём Рождения, Диас!</title>
+
+  <!-- Выразительная редакционная типографика с поддержкой кириллицы -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ==========================================================================
+       1. ПАЛИТРА И ПЕРЕМЕННЫЕ (СПОКОЙНЫЕ МАТОВЫЕ ОТТЕНКИ БУМАГИ И ЧЕРНИЛ)
+       ========================================================================== */
+    :root {
+      --ink: #1B365D;
+      --ink-deep: #132642;
+      --slate: #4A6FA5;
+      --slate-light: #8DA9C4;
+      --sky-muted: #DCE6F2;
+      --paper: #F6F2EA;
+      --paper-warm: #EDE6D8;
+      --paper-white: #FCFBF9;
+      --kraft: #D5C3AA;
+      --terracotta: #E07A5F;
+      --charcoal: #222831;
+      --muted-text: #526071;
+      --border-subtle: rgba(27, 54, 93, 0.22);
+      --shadow-soft: 0 14px 34px rgba(19, 38, 66, 0.12);
+      --shadow-card: 0 8px 24px rgba(19, 38, 66, 0.09);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      font-family: 'Golos Text', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--charcoal);
+      background-color: var(--paper);
+      overflow-x: hidden;
+    }
+
+    /* Текстура матовой дизайнерской бумаги поверх всего сайта */
+    .paper-grain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 3000;
+      opacity: 0.032;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    /* ==========================================================================
+       2. ВЕРХНЯЯ ПАНЕЛЬ НАВИГАЦИИ
+       ========================================================================== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 62px;
+      background: rgba(252, 251, 249, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1.5px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      z-index: 1000;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+      margin-right: 10px;
+    }
+
+    .nav-brand-tag {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      color: var(--paper-white);
+      background: var(--ink);
+      padding: 5px 11px;
+      border-radius: 6px;
+    }
+
+    .nav-brand-text {
+      font-weight: 600;
+      font-size: 0.92rem;
+      color: var(--ink);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .nav-links::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: 1.5px solid transparent;
+      border-radius: 8px;
+      padding: 7px 13px;
+      font-family: 'Golos Text', sans-serif;
+      font-weight: 600;
+      font-size: 0.88rem;
+      color: var(--muted-text);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover {
+      color: var(--ink);
+      background: rgba(74, 111, 165, 0.1);
+    }
+
+    .nav-btn.active {
+      background: var(--ink);
+      color: var(--paper-white);
+    }
+
+    /* ==========================================================================
+       3. КОНТЕЙНЕР ЭКРАНОВ (SPA) И ПЕРЕХОДЫ
+       ========================================================================== */
+    .app-container {
+      padding-top: 62px;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    .screen {
+      display: none;
+      min-height: calc(100vh - 62px);
+      width: 100%;
+      padding: 32px 24px 48px;
+      position: relative;
+      animation: pageReveal 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .screen.active {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes pageReveal {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ==========================================================================
+       3.1. СТАРТОВЫЙ КОНВЕРТ С ПЕЧАТЬЮ И ХОРЕОГРАФИЯ АНИМАЦИЙ
+       ========================================================================== */
+    .intro-envelope-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 2500;
+      background: var(--paper);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.65s ease;
+      overflow: hidden;
+    }
+
+    .intro-envelope-overlay.opened {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .intro-envelope-card {
+      width: min(540px, 90vw);
+      aspect-ratio: 16 / 10;
+      background: var(--paper-white);
+      border: 2px solid var(--ink);
+      border-radius: 14px;
+      position: relative;
+      box-shadow: 0 24px 54px rgba(19, 38, 66, 0.22);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 1000px;
+      transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .intro-envelope-overlay.opened .intro-envelope-card {
+      transform: scale(1.14) translateY(-18px);
+    }
+
+    .intro-flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 58%;
+      background: linear-gradient(180deg, #E8EFF7 0%, #DCE6F2 100%);
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      transform-origin: top center;
+      transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 2;
+    }
+
+    .intro-envelope-overlay.opening .intro-flap {
+      transform: rotateX(175deg);
+    }
+
+    .intro-seal {
+      position: relative;
+      z-index: 3;
+      width: 78px;
+      height: 78px;
+      border-radius: 50%;
+      background: var(--ink);
+      border: 3px solid var(--paper-white);
+      box-shadow: 0 8px 20px rgba(19, 38, 66, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--paper-white);
+      animation: sealPulse 1.4s ease-in-out infinite;
+      transition: transform 0.4s ease, opacity 0.35s ease;
+    }
+
+    .intro-envelope-overlay.opening .intro-seal {
+      transform: scale(1.25) translateY(-16px);
+      opacity: 0;
+    }
+
+    .intro-caption {
+      margin-top: 20px;
+      font-weight: 600;
+      font-size: 0.92rem;
+      color: var(--ink);
+      letter-spacing: 0.03em;
+    }
+
+    @keyframes sealPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+
+    .char-pop {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(18px) scale(0.86);
+      animation: charPopIn 0.48s cubic-bezier(0.22, 1.35, 0.36, 1) forwards;
+    }
+
+    @keyframes charPopIn {
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .balloon-float-slow {
+      animation: floatGentle 3.8s ease-in-out infinite;
+      transform-origin: center bottom;
+    }
+
+    .balloon-float-fast {
+      animation: floatGentle 3.1s ease-in-out infinite reverse;
+      transform-origin: center bottom;
+    }
+
+    @keyframes floatGentle {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(1.5deg); }
+    }
+
+    .anim-slide-up {
+      opacity: 0;
+      transform: translateY(28px);
+      animation: slideUpSpring 0.6s cubic-bezier(0.22, 1.25, 0.36, 1) forwards;
+    }
+
+    .anim-slide-left {
+      opacity: 0;
+      transform: translateX(-36px);
+      animation: slideSideSpring 0.62s cubic-bezier(0.22, 1.2, 0.36, 1) forwards;
+    }
+
+    .anim-slide-right {
+      opacity: 0;
+      transform: translateX(36px);
+      animation: slideSideSpring 0.62s cubic-bezier(0.22, 1.2, 0.36, 1) forwards;
+    }
+
+    .anim-drop-down {
+      opacity: 0;
+      transform: translateY(-24px);
+      animation: slideUpSpring 0.55s cubic-bezier(0.22, 1.25, 0.36, 1) forwards;
+    }
+
+    @keyframes slideUpSpring {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideSideSpring {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Пульсация и покачивание денежного букета */
+    .bouquet-sway {
+      animation: bouquetPulseAndSway 2.3s ease-in-out infinite;
+      transform-origin: center center;
+    }
+
+    @keyframes bouquetPulseAndSway {
+      0%, 100% { transform: scale(1) rotate(-1.2deg); }
+      50% { transform: scale(1.045) rotate(1.4deg); }
+    }
+
+    .bouquet-tap-burst {
+      animation: bouquetTapPop 0.28s cubic-bezier(0.22, 1.5, 0.36, 1) !important;
+    }
+
+    @keyframes bouquetTapPop {
+      0% { transform: scale(0.93) rotate(-2deg); }
+      60% { transform: scale(1.09) rotate(2deg); }
+      100% { transform: scale(1.02) rotate(0deg); }
+    }
+
+    /* ==========================================================================
+       4. ТАКТИЛЬНЫЕ ФОНЫ
+       ========================================================================== */
+    .bg-cover {
+      background-color: var(--paper-white);
+      background-image:
+        linear-gradient(to right, rgba(74, 111, 165, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(74, 111, 165, 0.06) 1px, transparent 1px);
+      background-size: 36px 36px;
+    }
+
+    .bg-gingham {
+      background-color: #F4EFE6;
+      background-image:
+        linear-gradient(90deg, rgba(74, 111, 165, 0.22) 50%, transparent 50%),
+        linear-gradient(rgba(74, 111, 165, 0.22) 50%, transparent 50%);
+      background-size: 84px 84px;
+    }
+
+    .bg-stationery {
+      background-color: var(--paper);
+      background-image: radial-gradient(rgba(27, 54, 93, 0.11) 1.25px, transparent 1.25px);
+      background-size: 22px 22px;
+    }
+
+    .bg-stripes {
+      background-color: var(--paper);
+      background-image: repeating-linear-gradient(
+        90deg,
+        #EFE9DD 0px,
+        #EFE9DD 48px,
+        #DCE5F0 48px,
+        #DCE5F0 96px
+      );
+      padding-top: 84px;
+      overflow: hidden;
+    }
+
+    .top-valance {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 36px;
+      overflow: hidden;
+      z-index: 6;
+      pointer-events: none;
+    }
+
+    /* Праздничная гирлянда с флажками под волнистым бордюром */
+    .party-garland {
+      position: absolute;
+      top: 22px;
+      left: 0;
+      width: 100%;
+      height: 62px;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .garland-sway {
+      transform-origin: top center;
+      animation: garlandGentleSway 4.2s ease-in-out infinite;
+    }
+
+    @keyframes garlandGentleSway {
+      0%, 100% { transform: rotate(0deg) translateY(0); }
+      50% { transform: rotate(0.4deg) translateY(2px); }
+    }
+
+    .washi-tape {
+      position: absolute;
+      width: 84px;
+      height: 22px;
+      background: rgba(141, 169, 196, 0.42);
+      border-left: 1px dashed rgba(27, 54, 93, 0.2);
+      border-right: 1px dashed rgba(27, 54, 93, 0.2);
+      backdrop-filter: blur(1px);
+      z-index: 8;
+      pointer-events: none;
+    }
+
+    /* ==========================================================================
+       5. ОБЩИЕ ЭЛЕМЕНТЫ УПРАВЛЕНИЯ
+       ========================================================================== */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: var(--ink);
+      color: var(--paper-white);
+      font-family: 'Golos Text', sans-serif;
+      font-weight: 600;
+      font-size: 1.05rem;
+      padding: 15px 34px;
+      border: 2px solid var(--ink);
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(27, 54, 93, 0.22);
+      cursor: pointer;
+      transition: transform 0.18s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+      user-select: none;
+    }
+
+    .btn-primary:hover {
+      background: var(--ink-deep);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 26px rgba(27, 54, 93, 0.28);
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px);
+    }
+
+    .btn-back-wrap {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--paper-white);
+      border: 1.5px solid rgba(27, 54, 93, 0.35);
+      border-radius: 10px;
+      padding: 9px 20px;
+      font-family: 'Golos Text', sans-serif;
+      font-weight: 600;
+      font-size: 0.92rem;
+      color: var(--ink);
+      box-shadow: 0 4px 12px rgba(19, 38, 66, 0.08);
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .btn-back:hover {
+      background: var(--sky-muted);
+      border-color: var(--ink);
+      transform: translateX(-2px);
+    }
+
+    /* ==========================================================================
+       6. ЭКРАН 1: ОБЛОЖКА
+       ========================================================================== */
+    .cover-grid {
+      max-width: 1080px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      align-items: center;
+      gap: 40px;
+      z-index: 5;
+    }
+
+    .cover-left {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .cover-kicker {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate);
+      background: var(--sky-muted);
+      padding: 6px 14px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+    }
+
+    .cover-title {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2rem, 3.8vw, 3.1rem);
+      line-height: 1.15;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+      margin-bottom: 22px;
+    }
+
+    .cat-sticker {
+      width: 100%;
+      max-width: 310px;
+      align-self: center;
+      filter: drop-shadow(0 12px 20px rgba(19, 38, 66, 0.14));
+      transition: transform 0.3s ease;
+    }
+
+    .cat-sticker:hover {
+      transform: rotate(-2deg) scale(1.02);
+    }
+
+    .cover-right {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--paper-white);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 24px;
+      padding: 32px 28px 36px;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+    }
+
+    .edition-stamp {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--ink);
+      border: 2px solid var(--ink);
+      padding: 6px 16px;
+      border-radius: 6px;
+      letter-spacing: 0.08em;
+      transform: rotate(-2deg);
+      margin-bottom: 6px;
+      background: var(--paper);
+    }
+
+    .gift-illustration {
+      width: 100%;
+      max-width: 340px;
+      margin-bottom: 12px;
+    }
+
+    /* ==========================================================================
+       7. ЭКРАН 2: МЕНЮ ВЫБОРА («ТВОЙ СЮРПРИЗ» — 4 КАРТОЧКИ)
+       ========================================================================== */
+    .surprise-header {
+      text-align: center;
+      max-width: 760px;
+      margin-bottom: 34px;
+      z-index: 5;
+      background: rgba(252, 251, 249, 0.92);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 18px 28px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .surprise-title {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 700;
+      font-size: clamp(1.3rem, 2.5vw, 1.98rem);
+      color: var(--ink);
+      line-height: 1.28;
+    }
+
+    .cards-row {
+      max-width: 1140px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      align-items: stretch;
+      z-index: 5;
+    }
+
+    .surprise-card {
+      background: var(--paper-white);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 18px 16px 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: var(--shadow-card);
+      cursor: pointer;
+      transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.24s ease, border-color 0.24s ease;
+      position: relative;
+    }
+
+    .surprise-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--ink);
+      box-shadow: 0 18px 34px rgba(19, 38, 66, 0.16);
+    }
+
+    .card-index {
+      position: absolute;
+      top: 13px;
+      left: 15px;
+      font-family: 'Unbounded', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--slate);
+    }
+
+    .shield-frame {
+      width: 100%;
+      max-width: 205px;
+      aspect-ratio: 1 / 1.02;
+      background-color: var(--paper);
+      background-image:
+        linear-gradient(90deg, rgba(74, 111, 165, 0.18) 50%, transparent 50%),
+        linear-gradient(rgba(74, 111, 165, 0.18) 50%, transparent 50%);
+      background-size: 26px 26px;
+      border: 1.5px solid rgba(27, 54, 93, 0.25);
+      border-radius: 26px 26px 62px 62px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 14px 0 18px;
+    }
+
+    .shield-inner {
+      width: 100%;
+      height: 100%;
+      background: var(--paper-white);
+      border: 1.5px solid rgba(27, 54, 93, 0.2);
+      border-radius: 18px 18px 48px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+    }
+
+    .shield-inner svg {
+      width: 82%;
+      height: 82%;
+      transition: transform 0.28s ease;
+    }
+
+    .surprise-card:hover .shield-inner svg {
+      transform: scale(1.06);
+    }
+
+    .card-label-btn {
+      width: 100%;
+      text-align: center;
+      background: var(--paper);
+      color: var(--ink);
+      border: 1.5px solid rgba(27, 54, 93, 0.25);
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-family: 'Golos Text', sans-serif;
+      font-weight: 700;
+      font-size: 1.02rem;
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .surprise-card:hover .card-label-btn {
+      background: var(--ink);
+      color: var(--paper-white);
+      border-color: var(--ink);
+    }
+
+    /* ==========================================================================
+       8. ЭКРАН 3: ПИСЬМО
+       ========================================================================== */
+    .letter-layout {
+      max-width: 1040px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 5;
+    }
+
+    .envelope-box {
+      width: 44%;
+      max-width: 410px;
+      z-index: 1;
+      margin-right: -38px;
+      filter: drop-shadow(0 14px 24px rgba(19, 38, 66, 0.15));
+    }
+
+    .letter-paper {
+      width: 60%;
+      max-width: 580px;
+      background: var(--paper-white);
+      border: 1.5px solid rgba(27, 54, 93, 0.26);
+      border-radius: 6px;
+      padding: 36px 38px 34px;
+      box-shadow: 0 18px 40px rgba(19, 38, 66, 0.14);
+      z-index: 2;
+      position: relative;
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 34px,
+        rgba(74, 111, 165, 0.14) 35px
+      );
+    }
+
+    .letter-paper .tape-top-left {
+      top: -10px;
+      left: 24px;
+      transform: rotate(-8deg);
+    }
+
+    .letter-paper .tape-top-right {
+      top: -10px;
+      right: 24px;
+      transform: rotate(7deg);
+    }
+
+    .letter-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid rgba(27, 54, 93, 0.18);
+      padding-bottom: 12px;
+      margin-bottom: 18px;
+    }
+
+    .letter-heading {
+      font-family: 'Caveat', cursive;
+      font-weight: 700;
+      font-size: clamp(2.1rem, 3.2vw, 2.65rem);
+      color: var(--ink);
+      line-height: 1.1;
+    }
+
+    .letter-date {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--slate);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .letter-body p {
+      font-family: 'Caveat', cursive;
+      font-weight: 600;
+      font-size: clamp(1.45rem, 2.15vw, 1.74rem);
+      line-height: 1.44;
+      color: var(--charcoal);
+      margin-bottom: 14px;
+    }
+
+    .letter-body p:last-child {
+      margin-bottom: 0;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    /* ==========================================================================
+       9. ЭКРАН 4: ДЕНЕЖНЫЙ БУКЕТ + ИНТЕРАКТИВНАЯ ПОДСКАЗКА
+       ========================================================================== */
+    .bouquet-layout {
+      max-width: 1020px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1.05fr;
+      align-items: center;
+      gap: 40px;
+      z-index: 5;
+    }
+
+    .bouquet-art {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .bouquet-art svg {
+      width: 100%;
+      max-width: 390px;
+      filter: drop-shadow(0 16px 26px rgba(19, 38, 66, 0.15));
+      transition: filter 0.2s ease;
+    }
+
+    .bouquet-art:hover svg {
+      filter: drop-shadow(0 20px 32px rgba(27, 54, 93, 0.25));
+    }
+
+    .bouquet-hint-badge {
+      margin-top: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--paper-white);
+      border: 1.5px solid var(--ink);
+      border-radius: 999px;
+      padding: 7px 18px;
+      font-family: 'Golos Text', sans-serif;
+      font-weight: 700;
+      font-size: 0.86rem;
+      color: var(--ink);
+      box-shadow: 0 6px 16px rgba(19, 38, 66, 0.12);
+      animation: hintBounce 2s ease-in-out infinite;
+    }
+
+    @keyframes hintBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .bouquet-card {
+      background: var(--paper-white);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 36px 34px;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+    }
+
+    .bouquet-tag {
+      display: inline-block;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink);
+      background: var(--sky-muted);
+      padding: 5px 12px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+    }
+
+    .bouquet-text {
+      font-family: 'Golos Text', sans-serif;
+      font-weight: 600;
+      font-size: clamp(1.15rem, 2vw, 1.42rem);
+      line-height: 1.55;
+      color: var(--ink);
+    }
+
+    /* ==========================================================================
+       9.1. МОДАЛЬНОЕ ОКНО СЕКРЕТНОГО ТЕСТА НА ТУРЕЦКОМ ЯЗЫКЕ + КУПЮРА 25 000 ТГ
+       ========================================================================== */
+    .secret-quiz-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 4000;
+      background: rgba(19, 38, 66, 0.72);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      animation: fadeInOverlay 0.28s ease forwards;
+    }
+
+    .secret-quiz-overlay.open {
+      display: flex;
+    }
+
+    @keyframes fadeInOverlay {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .secret-quiz-modal {
+      width: 100%;
+      max-width: 560px;
+      background: var(--paper-white);
+      border: 2px solid var(--ink);
+      border-radius: 22px;
+      padding: 28px 26px 26px;
+      box-shadow: 0 26px 60px rgba(10, 22, 42, 0.42);
+      position: relative;
+      animation: modalPopIn 0.35s cubic-bezier(0.22, 1.3, 0.36, 1) forwards;
+      max-height: 92vh;
+      overflow-y: auto;
+    }
+
+    @keyframes modalPopIn {
+      from { opacity: 0; transform: scale(0.9) translateY(16px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .quiz-close-x {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border-subtle);
+      background: var(--paper);
+      color: var(--ink);
+      font-size: 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.18s ease;
+    }
+
+    .quiz-close-x:hover {
+      background: var(--ink);
+      color: var(--paper-white);
+    }
+
+    .quiz-turkish-badge {
+      display: inline-block;
+      font-family: 'Unbounded', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      background: #E30A17;
+      color: #FFFFFF;
+      padding: 5px 12px;
+      border-radius: 6px;
+      margin-bottom: 14px;
+    }
+
+    .quiz-turkish-question {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 700;
+      font-size: clamp(1.12rem, 2.3vw, 1.38rem);
+      color: var(--ink);
+      line-height: 1.35;
+      margin-bottom: 20px;
+    }
+
+    .quiz-options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+
+    .quiz-option-btn {
+      width: 100%;
+      text-align: left;
+      background: var(--paper);
+      border: 1.5px solid rgba(27, 54, 93, 0.28);
+      border-radius: 12px;
+      padding: 13px 16px;
+      font-family: 'Golos Text', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--ink);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.18s ease;
+    }
+
+    .quiz-option-btn:hover {
+      background: var(--ink);
+      color: var(--paper-white);
+      border-color: var(--ink);
+      transform: translateX(4px);
+    }
+
+    .quiz-opt-letter {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: var(--paper-white);
+      color: var(--ink);
+      border: 1.5px solid rgba(27, 54, 93, 0.25);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Unbounded', sans-serif;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .reward-banknote-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .banknote-svg-frame {
+      width: 100%;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 16px 34px rgba(19, 38, 66, 0.26);
+      border: 2px solid #1B365D;
+      margin: 10px 0 18px;
+      animation: banknoteReveal 0.55s cubic-bezier(0.22, 1.35, 0.36, 1) forwards;
+    }
+
+    @keyframes banknoteReveal {
+      from { opacity: 0; transform: scale(0.84) rotate(-2deg); }
+      to { opacity: 1; transform: scale(1) rotate(0deg); }
+    }
+
+    .send-mom-callout {
+      width: 100%;
+      background: #FEF3C7;
+      border: 2px dashed #B45309;
+      border-radius: 14px;
+      padding: 14px 18px;
+      margin-bottom: 18px;
+    }
+
+    .send-mom-title {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+      color: #92400E;
+      letter-spacing: 0.01em;
+    }
+
+    .send-mom-sub {
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: #78350F;
+      margin-top: 4px;
+    }
+
+    /* ==========================================================================
+       9.2. ПОЛНОЭКРАННОЕ УВЕДОМЛЕНИЕ О ДЕПОРТАЦИИ В КАЗАХСТАН
+       ========================================================================== */
+    .deportation-fullscreen {
+      position: fixed;
+      inset: 0;
+      z-index: 4800;
+      background: repeating-linear-gradient(
+        -45deg,
+        #7F1D1D,
+        #7F1D1D 24px,
+        #991B1B 24px,
+        #991B1B 48px
+      );
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: deportShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    }
+
+    .deportation-fullscreen.open {
+      display: flex;
+    }
+
+    @keyframes deportShake {
+      0%, 100% { transform: translateX(0); }
+      15%, 45%, 75% { transform: translateX(-8px); }
+      30%, 60%, 90% { transform: translateX(8px); }
+    }
+
+    .deportation-card {
+      width: 100%;
+      max-width: 620px;
+      background: #FCFBF9;
+      border: 4px solid #1E293B;
+      border-radius: 22px;
+      padding: 34px 28px;
+      text-align: center;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.55);
+      position: relative;
+    }
+
+    .deport-stamp {
+      display: inline-block;
+      border: 3px solid #DC2626;
+      color: #DC2626;
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 800;
+      font-size: 0.82rem;
+      letter-spacing: 0.12em;
+      padding: 6px 16px;
+      border-radius: 8px;
+      transform: rotate(-3deg);
+      margin-bottom: 18px;
+      text-transform: uppercase;
+    }
+
+    .deport-headline {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.45rem, 3.4vw, 2.2rem);
+      line-height: 1.2;
+      color: #B91C1C;
+      margin-bottom: 14px;
+    }
+
+    .deport-desc {
+      font-family: 'Golos Text', sans-serif;
+      font-weight: 600;
+      font-size: 1.04rem;
+      line-height: 1.5;
+      color: #334155;
+      margin-bottom: 24px;
+    }
+
+    .deport-return-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #1E293B;
+      color: #FFFFFF;
+      font-family: 'Golos Text', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.3);
+      transition: transform 0.18s ease, background-color 0.2s ease;
+    }
+
+    .deport-return-btn:hover {
+      background: #0F172A;
+      transform: translateY(-2px);
+    }
+
+    /* ==========================================================================
+       9.3. МОДАЛЬНОЕ ОКНО ЭКСПОРТА ГОТОВОГО INDEX.HTML СО ВСТРОЕННЫМИ ФОТО
+       ========================================================================== */
+    .export-modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 4900;
+      background: rgba(19, 38, 66, 0.76);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+
+    .export-modal-overlay.open {
+      display: flex;
+    }
+
+    .export-modal-card {
+      width: 100%;
+      max-width: 520px;
+      background: var(--paper-white);
+      border: 2px solid var(--ink);
+      border-radius: 20px;
+      padding: 26px 24px;
+      box-shadow: 0 24px 56px rgba(10, 22, 42, 0.45);
+      position: relative;
+    }
+
+    .export-modal-title {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+
+    .export-modal-text {
+      font-size: 0.94rem;
+      line-height: 1.5;
+      color: var(--charcoal);
+      margin-bottom: 16px;
+    }
+
+    .export-status-list {
+      background: var(--paper);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    /* ==========================================================================
+       10. ЭКРАН 5: ЭПИЧНЫЙ ТОРТ, ФОТО (POLAROID + ЗЕРКАЛО) И ПРОИГРЫВАТЕЛЬ
+       ========================================================================== */
+    .cake-confetti-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1800;
+      overflow: hidden;
+    }
+
+    .paper-confetti-piece {
+      position: absolute;
+      width: 11px;
+      height: 18px;
+      border-radius: 2px;
+      opacity: 0;
+      animation: paperConfettiBurst var(--dur, 2.4s) cubic-bezier(0.16, 0.88, 0.32, 1) forwards;
+    }
+
+    @keyframes paperConfettiBurst {
+      0% {
+        opacity: 1;
+        transform: translate(0, 0) rotate(0deg) scale(0.7);
+      }
+      20% {
+        opacity: 1;
+        transform: translate(var(--tx1, 40px), var(--ty1, -160px)) rotate(140deg) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(var(--tx2, 90px), var(--ty2, 340px)) rotate(540deg) scale(0.85);
+      }
+    }
+
+    .cake-screen-wrapper {
+      max-width: 1140px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+      z-index: 5;
+    }
+
+    .cake-stage-banner {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--paper-white);
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      padding: 8px 24px;
+      box-shadow: 0 8px 22px rgba(19, 38, 66, 0.12);
+    }
+
+    .cake-stage-banner-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--terracotta);
+    }
+
+    .cake-stage-banner-text {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 700;
+      font-size: clamp(0.76rem, 1.4vw, 0.92rem);
+      color: var(--ink);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .cake-top-stage {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 0.94fr 1.16fr;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .photo-gallery-zone {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      position: relative;
+      padding: 16px;
+      background: rgba(252, 251, 249, 0.65);
+      border: 1.5px solid rgba(27, 54, 93, 0.16);
+      border-radius: 24px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .polaroid-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .photo-slot {
+      background: var(--paper-white);
+      border: 1px solid rgba(27, 54, 93, 0.18);
+      box-shadow: 0 10px 24px rgba(19, 38, 66, 0.14);
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .photo-slot:hover {
+      transform: scale(1.04) rotate(0deg) !important;
+      box-shadow: 0 16px 32px rgba(19, 38, 66, 0.22);
+      z-index: 6;
+    }
+
+    .polaroid-frame {
+      width: 170px;
+      padding: 10px 10px 28px 10px;
+      border-radius: 4px;
+    }
+
+    .polaroid-frame .washi-tape {
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-2deg);
+      width: 64px;
+      height: 18px;
+    }
+
+    .polaroid-1 {
+      transform: rotate(-3.5deg);
+    }
+
+    .polaroid-2 {
+      transform: rotate(2.5deg) translateX(10px);
+    }
+
+    .polaroid-img-box {
+      width: 100%;
+      height: 130px;
+      background: var(--sky-muted);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .polaroid-caption {
+      position: absolute;
+      bottom: 5px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-family: 'Caveat', cursive;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--ink);
+      pointer-events: none;
+    }
+
+    .mirror-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transform: rotate(2.5deg);
+      transition: transform 0.25s ease;
+    }
+
+    .mirror-wrapper:hover {
+      transform: rotate(0deg) scale(1.04);
+      z-index: 6;
+    }
+
+    .mirror-crest {
+      margin-bottom: -8px;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .oval-frame {
+      width: 170px;
+      height: 232px;
+      border-radius: 50%;
+      padding: 11px;
+      background: linear-gradient(155deg, #E2E8F0 0%, #8DA9C4 45%, #3B5B8C 100%);
+      border: 2px solid var(--ink);
+      box-shadow:
+        0 14px 28px rgba(19, 38, 66, 0.22),
+        inset 0 2px 5px rgba(255, 255, 255, 0.85);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .oval-img-box {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: var(--sky-muted);
+      border: 2.5px solid var(--paper-white);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow: inset 0 0 14px rgba(19, 38, 66, 0.24);
+    }
+
+    .oval-img-box::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: linear-gradient(
+        130deg,
+        rgba(255, 255, 255, 0.34) 0%,
+        rgba(255, 255, 255, 0.08) 32%,
+        transparent 34%
+      );
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .photo-slot img,
+    .oval-img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .oval-img-box img {
+      object-position: center 44%;
+      transform: scale(1.16);
+    }
+
+    #slot-photo1 img {
+      object-position: center 22%;
+    }
+
+    .photo-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 10px;
+      color: var(--ink);
+      gap: 6px;
+    }
+
+    .photo-placeholder span {
+      font-weight: 600;
+      font-size: 0.76rem;
+      line-height: 1.25;
+    }
+
+    .photo-edit-badge {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      background: rgba(27, 54, 93, 0.88);
+      color: var(--paper-white);
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 6px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    .photo-slot:hover .photo-edit-badge,
+    .oval-frame:hover .photo-edit-badge {
+      opacity: 1;
+    }
+
+    /* Центральная сцена эпичного трёхъярусного торта */
+    .cake-center-zone {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(252, 251, 249, 0.82);
+      border: 1.5px solid rgba(27, 54, 93, 0.2);
+      border-radius: 26px;
+      padding: 20px 22px 22px;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      transition: background-color 0.45s ease, border-color 0.45s ease;
+    }
+
+    .cake-center-zone.wish-granted {
+      background: rgba(252, 251, 249, 0.96);
+      border-color: var(--ink);
+    }
+
+    .cake-wish-banner {
+      display: none;
+      background: var(--ink);
+      color: var(--paper-white);
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 700;
+      font-size: clamp(0.76rem, 1.35vw, 0.9rem);
+      padding: 8px 18px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      text-align: center;
+      letter-spacing: 0.03em;
+      animation: wishBannerPop 0.45s cubic-bezier(0.22, 1.4, 0.36, 1) forwards;
+    }
+
+    .cake-center-zone.wish-granted .cake-wish-banner {
+      display: inline-block;
+    }
+
+    @keyframes wishBannerPop {
+      from { opacity: 0; transform: scale(0.84) translateY(-8px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .cake-svg-wrapper {
+      width: 100%;
+      max-width: 490px;
+      cursor: pointer;
+      filter: drop-shadow(0 16px 26px rgba(19, 38, 66, 0.16));
+      transition: transform 0.22s ease;
+    }
+
+    .cake-svg-wrapper:hover {
+      transform: scale(1.015);
+    }
+
+    .cake-topper-flag {
+      transform-origin: center bottom;
+      animation: topperWave 3.2s ease-in-out infinite;
+    }
+
+    @keyframes topperWave {
+      0%, 100% { transform: rotate(-1.2deg); }
+      50% { transform: rotate(1.4deg); }
+    }
+
+    .candle-halo {
+      transition: opacity 0.4s ease;
+      animation: haloPulse 1.4s ease-in-out infinite alternate;
+    }
+
+    @keyframes haloPulse {
+      from { opacity: 0.24; transform: scale(0.96); }
+      to { opacity: 0.42; transform: scale(1.04); }
+    }
+
+    .candles-out .candle-halo {
+      opacity: 0 !important;
+      animation: none;
+    }
+
+    .candle-flame {
+      transform-origin: center bottom;
+      animation: flickerFlame 0.65s infinite alternate ease-in-out;
+      transition: opacity 0.28s ease, transform 0.28s ease;
+    }
+
+    .candle-flame.delay-1 { animation-delay: 0.14s; }
+    .candle-flame.delay-2 { animation-delay: 0.28s; }
+    .candle-flame.delay-3 { animation-delay: 0.42s; }
+    .candle-flame.delay-4 { animation-delay: 0.52s; }
+
+    @keyframes flickerFlame {
+      0% { transform: scale(1) rotate(-2deg); }
+      50% { transform: scale(1.08, 0.94) rotate(2deg); }
+      100% { transform: scale(0.95, 1.06) rotate(-1.2deg); }
+    }
+
+    .candles-out .candle-flame {
+      opacity: 0;
+      transform: scale(0);
+    }
+
+    .smoke-trail {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .candles-out .smoke-trail {
+      animation: smokeTrailRise 2.1s ease-out forwards;
+    }
+
+    @keyframes smokeTrailRise {
+      0% { opacity: 0.85; transform: translateY(0) scale(0.75); }
+      45% { opacity: 0.55; transform: translateY(-22px) translateX(4px) scale(1.15); }
+      100% { opacity: 0; transform: translateY(-48px) translateX(-5px) scale(1.55); }
+    }
+
+    .cake-action-row {
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-blow-candles {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      background: var(--ink);
+      color: var(--paper-white);
+      border: 2px solid var(--ink);
+      border-radius: 12px;
+      padding: 11px 22px;
+      font-family: 'Golos Text', sans-serif;
+      font-weight: 700;
+      font-size: 0.94rem;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(27, 54, 93, 0.22);
+      transition: all 0.2s ease;
+    }
+
+    .btn-blow-candles:hover {
+      background: var(--ink-deep);
+      transform: translateY(-2px);
+    }
+
+    .btn-blow-candles.relight-mode {
+      background: var(--paper-white);
+      color: var(--ink);
+    }
+
+    .btn-blow-candles.relight-mode:hover {
+      background: var(--sky-muted);
+    }
+
+    /* Виниловый проигрыватель */
+    .vinyl-box-container {
+      width: 100%;
+      max-width: 840px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--paper-white);
+      border: 1.5px solid rgba(27, 54, 93, 0.28);
+      border-radius: 18px;
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+
+    .vinyl-box-lid {
+      background-color: #4A6FA5;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.16) 50%, transparent 50%),
+        linear-gradient(rgba(255, 255, 255, 0.16) 50%, transparent 50%);
+      background-size: 36px 36px;
+      border-right: 1.5px solid rgba(27, 54, 93, 0.25);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      min-height: 232px;
+    }
+
+    .lid-ribbon-v {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 22px;
+      background: var(--ink);
+    }
+
+    .lid-ribbon-h {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 22px;
+      background: var(--ink);
+    }
+
+    .lid-cat-badge {
+      position: relative;
+      z-index: 2;
+      background: var(--paper-white);
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+      width: 152px;
+      height: 152px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 18px rgba(19, 38, 66, 0.2);
+      padding: 8px;
+    }
+
+    .vinyl-box-tray {
+      background: radial-gradient(circle at center, #FCFBF9 0%, #EAE3D5 100%);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      min-height: 232px;
+    }
+
+    .turntable-tonearm {
+      position: absolute;
+      top: 16px;
+      right: 26px;
+      width: 56px;
+      height: 118px;
+      transform-origin: 40px 16px;
+      transform: rotate(0deg);
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .turntable-tonearm.engaged {
+      transform: rotate(25deg);
+    }
+
+    .vinyl-disc-btn {
+      width: 178px;
+      height: 178px;
+      border-radius: 50%;
+      background:
+        repeating-radial-gradient(
+          circle at center,
+          #161920 0px,
+          #161920 3px,
+          #252A34 4px,
+          #161920 5px
+        );
+      border: 3px solid #0E1015;
+      box-shadow: 0 10px 22px rgba(19, 38, 66, 0.26);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.2s ease;
+      user-select: none;
+    }
+
+    .vinyl-disc-btn:hover {
+      transform: scale(1.03);
+    }
+
+    .vinyl-disc-btn.spinning {
+      animation: spinVinyl 4.5s linear infinite;
+    }
+
+    @keyframes spinVinyl {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .vinyl-label {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--ink);
+      border: 2px solid var(--kraft);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--paper-white);
+      font-family: 'Golos Text', sans-serif;
+      font-weight: 700;
+      font-size: 0.78rem;
+      letter-spacing: 0.02em;
+      z-index: 2;
+      position: relative;
+    }
+
+    .vinyl-spindle {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--paper);
+      margin-top: 4px;
+    }
+
+    .music-notes-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .floating-note {
+      position: absolute;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--ink);
+      animation: noteFloatUp 1.8s ease-out forwards;
+    }
+
+    @keyframes noteFloatUp {
+      0% {
+        opacity: 0;
+        transform: translateY(0) scale(0.7);
+      }
+      25% {
+        opacity: 0.85;
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-90px) translateX(var(--dx, 14px)) scale(1.1);
+      }
+    }
+
+    .vinyl-status-row {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .vinyl-status {
+      font-weight: 600;
+      font-size: 0.84rem;
+      color: var(--ink);
+      text-align: center;
+    }
+
+    .eq-bars {
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 2.5px;
+      height: 14px;
+    }
+
+    .eq-bar {
+      width: 3px;
+      height: 4px;
+      background: var(--slate-light);
+      border-radius: 2px;
+      transition: height 0.2s ease, background-color 0.2s ease;
+    }
+
+    .eq-bars.playing .eq-bar {
+      background: var(--ink);
+      animation: eqBounce 0.55s ease-in-out infinite alternate;
+    }
+
+    .eq-bars.playing .eq-bar:nth-child(2) { animation-delay: 0.14s; }
+    .eq-bars.playing .eq-bar:nth-child(3) { animation-delay: 0.28s; }
+    .eq-bars.playing .eq-bar:nth-child(4) { animation-delay: 0.08s; }
+
+    @keyframes eqBounce {
+      0% { height: 4px; }
+      100% { height: 14px; }
+    }
+
+    .audio-controls-bar {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .track-switch-btn {
+      background: var(--paper-white);
+      border: 1.5px solid rgba(27, 54, 93, 0.3);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-family: 'Golos Text', sans-serif;
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .track-switch-btn:hover {
+      background: var(--sky-muted);
+      border-color: var(--ink);
+    }
+
+    .volume-control-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--paper-white);
+      border: 1.5px solid rgba(27, 54, 93, 0.25);
+      border-radius: 8px;
+      padding: 3px 9px;
+    }
+
+    .volume-slider {
+      width: 72px;
+      accent-color: var(--ink);
+      cursor: pointer;
+    }
+
+    /* ==========================================================================
+       11. ЭКРАН 6: ВИДЕОПОЗДРАВЛЕНИЕ («Видео»)
+       ========================================================================== */
+    .video-stage-wrapper {
+      max-width: 880px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 22px;
+      z-index: 5;
+    }
+
+    .video-header-card {
+      text-align: center;
+      background: var(--paper-white);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 16px 28px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .video-kicker {
+      display: inline-block;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+      background: var(--sky-muted);
+      padding: 4px 12px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+
+    .video-main-heading {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.3rem, 2.6vw, 1.95rem);
+      color: var(--ink);
+      line-height: 1.25;
+    }
+
+    /* Оформление в виде тактильной кинорамки с перфорацией киноплёнки */
+    .cinema-frame-card {
+      width: 100%;
+      background: var(--paper-white);
+      border: 2px solid var(--ink);
+      border-radius: 22px;
+      padding: 18px 18px 20px;
+      box-shadow: 0 20px 44px rgba(19, 38, 66, 0.16);
+      position: relative;
+    }
+
+    .cinema-frame-card .tape-left {
+      top: -10px;
+      left: 28px;
+      transform: rotate(-6deg);
+    }
+
+    .cinema-frame-card .tape-right {
+      top: -10px;
+      right: 28px;
+      transform: rotate(6deg);
+    }
+
+    .film-sprocket-bar {
+      width: 100%;
+      height: 18px;
+      background: var(--ink);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 10px;
+      margin-bottom: 12px;
+    }
+
+    .film-sprocket-bar.bottom {
+      margin-bottom: 0;
+      margin-top: 12px;
+    }
+
+    .sprocket-hole {
+      width: 14px;
+      height: 8px;
+      border-radius: 2px;
+      background: var(--paper);
+      opacity: 0.92;
+    }
+
+    .video-viewport {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #121A29;
+      border-radius: 12px;
+      border: 2px solid var(--ink);
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .video-viewport video,
+    .video-viewport iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      object-fit: contain;
+      background: #0D131F;
+    }
+
+    .video-placeholder-box {
+      width: 100%;
+      height: 100%;
+      padding: 24px 20px;
+      background: radial-gradient(circle at center, #22385E 0%, #13223B 100%);
+      color: var(--paper-white);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 12px;
+    }
+
+    .video-placeholder-title {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 700;
+      font-size: clamp(1rem, 2.2vw, 1.32rem);
+      color: var(--paper-white);
+    }
+
+    .video-placeholder-desc {
+      max-width: 480px;
+      font-size: 0.92rem;
+      line-height: 1.48;
+      color: var(--sky-muted);
+    }
+
+    .btn-pick-video {
+      margin-top: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--paper-white);
+      color: var(--ink);
+      border: 2px solid var(--paper-white);
+      border-radius: 10px;
+      padding: 10px 20px;
+      font-family: 'Golos Text', sans-serif;
+      font-weight: 700;
+      font-size: 0.92rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-pick-video:hover {
+      background: var(--sky-muted);
+      transform: translateY(-2px);
+    }
+
+    .video-footer-note {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 0 4px;
+    }
+
+    .video-handwritten-caption {
+      font-family: 'Caveat', cursive;
+      font-weight: 700;
+      font-size: clamp(1.45rem, 2.3vw, 1.85rem);
+      color: var(--ink);
+      line-height: 1.2;
+    }
+
+    .btn-change-video-mini {
+      background: var(--paper);
+      border: 1.5px solid rgba(27, 54, 93, 0.28);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-family: 'Golos Text', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .btn-change-video-mini:hover {
+      background: var(--sky-muted);
+      border-color: var(--ink);
+    }
+
+    .toast-banner {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--ink);
+      color: var(--paper-white);
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      padding: 11px 22px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      box-shadow: 0 12px 28px rgba(19, 38, 66, 0.28);
+      z-index: 2000;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      text-align: center;
+      max-width: 92vw;
+    }
+
+    .toast-banner.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ==========================================================================
+       12. АДАПТИВНАЯ ВЁРСТКА
+       ========================================================================== */
+    @media (max-width: 980px) {
+      .cards-row {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 560px;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .navbar {
+        padding: 0 14px;
+        height: 56px;
+      }
+
+      .nav-brand-text {
+        display: none;
+      }
+
+      .nav-btn {
+        padding: 6px 10px;
+        font-size: 0.82rem;
+      }
+
+      .app-container {
+        padding-top: 56px;
+      }
+
+      .screen {
+        min-height: calc(100vh - 56px);
+        padding: 24px 16px 38px;
+      }
+
+      .bg-stripes {
+        padding-top: 72px;
+      }
+
+      .cover-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .cover-left {
+        align-items: center;
+        text-align: center;
+      }
+
+      .cat-sticker {
+        max-width: 230px;
+      }
+
+      .gift-illustration {
+        max-width: 270px;
+      }
+
+      .letter-layout {
+        flex-direction: column;
+      }
+
+      .envelope-box {
+        width: 78%;
+        max-width: 290px;
+        margin-right: 0;
+        margin-bottom: -24px;
+      }
+
+      .letter-paper {
+        width: 100%;
+        padding: 26px 20px;
+      }
+
+      .bouquet-layout {
+        grid-template-columns: 1fr;
+        gap: 26px;
+      }
+
+      .bouquet-art svg {
+        max-width: 280px;
+      }
+
+      .bouquet-card {
+        padding: 26px 22px;
+      }
+
+      .cake-top-stage {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .photo-gallery-zone {
+        flex-wrap: wrap;
+        padding: 14px 10px;
+      }
+
+      .polaroid-frame {
+        width: 146px;
+      }
+
+      .polaroid-img-box {
+        height: 110px;
+      }
+
+      .oval-frame {
+        width: 148px;
+        height: 200px;
+      }
+
+      .cake-center-zone {
+        padding: 16px 12px 18px;
+      }
+
+      .vinyl-box-container {
+        grid-template-columns: 1fr;
+      }
+
+      .vinyl-box-lid {
+        border-right: none;
+        border-bottom: 1.5px solid rgba(27, 54, 93, 0.25);
+        min-height: 185px;
+      }
+
+      .cinema-frame-card {
+        padding: 12px 12px 16px;
+      }
+
+      .video-viewport {
+        aspect-ratio: 4 / 3;
+      }
+
+      .secret-quiz-modal {
+        padding: 22px 18px;
+      }
+
+      .deportation-card {
+        padding: 26px 18px;
+      }
+    }
+
+    @media (max-width: 540px) {
+      .cards-row {
+        grid-template-columns: 1fr;
+        max-width: 320px;
+        gap: 20px;
+      }
+
+      .shield-frame {
+        max-width: 210px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Слой матовой текстуры бумаги -->
+  <div class="paper-grain" aria-hidden="true"></div>
+
+  <!-- Слой для залпа бумажного конфетти при задувании свечей -->
+  <div id="cakeConfettiLayer" class="cake-confetti-layer" aria-hidden="true"></div>
+
+  <!-- Стартовый запечатанный конверт с анимацией открытия -->
+  <div id="introOverlay" class="intro-envelope-overlay" onclick="openIntroEnvelope()" role="button" tabindex="0" aria-label="Открыть поздравительный конверт">
+    <div class="intro-envelope-card">
+      <div class="intro-flap"></div>
+      <div class="intro-seal">Д</div>
+    </div>
+    <div class="intro-caption">Для Диаса • Нажми, чтобы распечатать</div>
+  </div>
+
+  <!-- ========================================================================
+       ВЕРХНЯЯ ПАНЕЛЬ НАВИГАЦИИ
+       ======================================================================== -->
+  <header class="navbar">
+    <div class="nav-brand" id="navBrandTrigger" onclick="navigateTo('cover')" title="На главную">
+      <span class="nav-brand-tag">ДИАС</span>
+      <span class="nav-brand-text">Открытка ко дню рождения</span>
+    </div>
+
+    <nav class="nav-links" aria-label="Навигация по открытке">
+      <button class="nav-btn active" data-target="cover" onclick="navigateTo('cover')">С Днём Рождения</button>
+      <button class="nav-btn" data-target="surprise" onclick="navigateTo('surprise')">Твой сюрприз</button>
+      <button class="nav-btn" data-target="letter" onclick="navigateTo('letter')">Письмо</button>
+      <button class="nav-btn" data-target="bouquet" onclick="navigateTo('bouquet')">Букет</button>
+      <button class="nav-btn" data-target="cake" onclick="navigateTo('cake')">Торт</button>
+      <button class="nav-btn" data-target="video" onclick="navigateTo('video')">Видео</button>
+    </nav>
+  </header>
+
+  <!-- Скрытые input для загрузки фотографий и видео с устройства -->
+  <input type="file" id="photoFileInput" accept="image/*" style="display: none;" />
+  <input type="file" id="videoFileInput" accept="video/*" style="display: none;" />
+
+  <!-- Всплывающее уведомление -->
+  <div id="toastBanner" class="toast-banner" role="status" aria-live="polite"></div>
+
+  <!-- ========================================================================
+       СКРЫТОЕ ОКНО ЭКСПОРТА ГОТОВОГО INDEX.HTML С ВШИТЫМИ ФОТО ДЛЯ GITHUB
+       (открывается при удержании кнопки «ДИАС» в шапке 1.5 сек или по ?edit=1)
+       ======================================================================== -->
+  <div id="exportModalOverlay" class="export-modal-overlay" role="dialog" aria-modal="true">
+    <div class="export-modal-card">
+      <button type="button" class="quiz-close-x" onclick="closeExportModal()" aria-label="Закрыть">×</button>
+      <h3 class="export-modal-title">Сохранить сайт с фото для GitHub</h3>
+      <p class="export-modal-text">
+        Фотографии, выбранные на телефоне, хранятся только в памяти этого браузера. Нажми кнопку ниже — скачается готовый <b>index.html</b>, в который все твои фото уже вшиты внутрь кода. Просто загрузи его в GitHub, и фото откроются на любом телефоне!
+      </p>
+      <div class="export-status-list" id="exportPhotoStatusList"></div>
+      <button type="button" class="btn-primary" onclick="downloadEmbeddedHtml()" style="width: 100%;">
+        📥 Скачать готовый index.html с фото
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       МОДАЛЬНОЕ ОКНО: СЕКРЕТНЫЙ ТЕСТ НА ТУРЕЦКОМ + КУПЮРА 25 000 ТЕНГЕ
+       ======================================================================== -->
+  <div id="turkishQuizOverlay" class="secret-quiz-overlay" role="dialog" aria-modal="true" aria-labelledby="turkishQuizTitle">
+    <div class="secret-quiz-modal">
+      <button type="button" class="quiz-close-x" onclick="closeTurkishQuiz()" aria-label="Kapat">×</button>
+
+      <div id="quizQuestionStep">
+        <span class="quiz-turkish-badge">GİZLİ SORU • TÜRKİYE TESTİ</span>
+        <h3 class="quiz-turkish-question" id="turkishQuizTitle">
+          Bugün itibarıyla Türkiye Cumhuriyeti'nin mevcut Cumhurbaşkanı kimdir?
+        </h3>
+
+        <div class="quiz-options-list">
+          <button type="button" class="quiz-option-btn" onclick="answerTurkishQuiz(false)">
+            <span class="quiz-opt-letter">A</span>
+            <span>İosif Vissarionoviç Stalin</span>
+          </button>
+
+          <button type="button" class="quiz-option-btn" onclick="answerTurkishQuiz(true)">
+            <span class="quiz-opt-letter">B</span>
+            <span>Recep Tayyip Erdoğan</span>
+          </button>
+
+          <button type="button" class="quiz-option-btn" onclick="answerTurkishQuiz(false)">
+            <span class="quiz-opt-letter">C</span>
+            <span>John Smith (Texas'tan sıradan bir kovboy)</span>
+          </button>
+
+          <button type="button" class="quiz-option-btn" onclick="answerTurkishQuiz(false)">
+            <span class="quiz-opt-letter">D</span>
+            <span>Kaptan Jack Sparrow</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="quizRewardStep" class="reward-banknote-box" style="display: none;">
+        <span class="quiz-turkish-badge" style="background: #15803D;">TEBRİKLER! DOĞRU CEVAP!</span>
+
+        <div class="banknote-svg-frame">
+          <svg viewBox="0 0 640 310" width="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Купюра 25 000 тенге для Диаса">
+            <defs>
+              <linearGradient id="tengeBg" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#E6F4EA"/>
+                <stop offset="45%" stop-color="#D1FAE5"/>
+                <stop offset="100%" stop-color="#DBEAFE"/>
+              </linearGradient>
+              <linearGradient id="foilStrip" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#FDE68A"/>
+                <stop offset="35%" stop-color="#93C5FD"/>
+                <stop offset="70%" stop-color="#6EE7B7"/>
+                <stop offset="100%" stop-color="#FCD34D"/>
+              </linearGradient>
+              <pattern id="kazakhOrnament" width="32" height="32" patternUnits="userSpaceOnUse">
+                <path d="M16 4 C22 4 28 10 28 16 C28 22 22 28 16 28 C10 28 4 22 4 16 C4 10 10 4 16 4 Z" fill="none" stroke="#065F46" stroke-width="1.2" opacity="0.14"/>
+                <circle cx="16" cy="16" r="3" fill="#047857" opacity="0.14"/>
+              </pattern>
+            </defs>
+
+            <rect width="640" height="310" fill="url(#tengeBg)"/>
+            <rect width="640" height="310" fill="url(#kazakhOrnament)"/>
+
+            <rect x="12" y="12" width="616" height="286" rx="10" fill="none" stroke="#065F46" stroke-width="3"/>
+            <rect x="19" y="19" width="602" height="272" rx="6" fill="none" stroke="#B45309" stroke-width="1.5" stroke-dasharray="6 3"/>
+
+            <rect x="478" y="14" width="26" height="282" fill="url(#foilStrip)" opacity="0.88"/>
+            <path d="M478 40 L504 55 M478 90 L504 105 M478 140 L504 155 M478 190 L504 205 M478 240 L504 255" stroke="#FFFFFF" stroke-width="2" opacity="0.7"/>
+
+            <g transform="translate(115, 158)">
+              <circle cx="0" cy="0" r="68" fill="#FFFFFF" fill-opacity="0.72" stroke="#047857" stroke-width="2"/>
+              <circle cx="0" cy="-12" r="24" fill="#F59E0B" opacity="0.85"/>
+              <path d="M-14 48 L-6 -4 L6 -4 L14 48 Z" fill="none" stroke="#065F46" stroke-width="2.5"/>
+              <path d="M-10 22 L10 22 M-8 8 L8 8" stroke="#065F46" stroke-width="2"/>
+              <circle cx="0" cy="-12" r="14" fill="#FBBF24" stroke="#92400E" stroke-width="2"/>
+            </g>
+
+            <text x="34" y="46" fill="#064E3B" font-family="Unbounded, sans-serif" font-weight="800" font-size="13" letter-spacing="0.8">ҚАЗАҚСТАН ҰЛТТЫҚ БАНКІ</text>
+            <text x="34" y="64" fill="#B45309" font-family="Golos Text, sans-serif" font-weight="700" font-size="11" letter-spacing="1.2">АРНАЙЫ МЕРЕКЕЛІК ШЫҒАРЫЛЫМ • ДИАС</text>
+
+            <text x="606" y="56" text-anchor="end" fill="#064E3B" font-family="Unbounded, sans-serif" font-weight="800" font-size="28">25 000</text>
+            <text x="606" y="76" text-anchor="end" fill="#047857" font-family="Unbounded, sans-serif" font-weight="700" font-size="12">ТЕҢГЕ</text>
+
+            <text x="335" y="156" text-anchor="middle" fill="#064E3B" font-family="Unbounded, sans-serif" font-weight="800" font-size="48" letter-spacing="-1">25 000 ₸</text>
+            <text x="335" y="184" text-anchor="middle" fill="#047857" font-family="Unbounded, sans-serif" font-weight="700" font-size="14" letter-spacing="1.5">ЖИЫРМА БЕС МЫҢ ТЕҢГЕ</text>
+
+            <g transform="translate(335, 224) rotate(-3)">
+              <rect x="-118" y="-16" width="236" height="32" rx="6" fill="#FEF3C7" stroke="#B45309" stroke-width="2"/>
+              <text x="0" y="5" text-anchor="middle" fill="#92400E" font-family="Unbounded, sans-serif" font-weight="700" font-size="11">ТУҒАН КҮН БОНУСЫ • 100%</text>
+            </g>
+
+            <text x="34" y="276" fill="#991B1B" font-family="Unbounded, sans-serif" font-weight="700" font-size="13" letter-spacing="1.5">KZ 2026 ДИАС 25000</text>
+            <text x="606" y="278" text-anchor="end" fill="#064E3B" font-family="Unbounded, sans-serif" font-weight="800" font-size="24">25 000 ₸</text>
+          </svg>
+        </div>
+
+        <div class="send-mom-callout">
+          <div class="send-mom-title">Сфоткай и скинь маме 📸</div>
+          <div class="send-mom-sub">Ты честно выиграл 25 000 ₸ за знание президента Турции!</div>
+        </div>
+
+        <button type="button" class="btn-primary" onclick="closeTurkishQuiz()" style="width: 100%;">
+          Вернуться к букету
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       ПОЛНОЭКРАННОЕ УВЕДОМЛЕНИЕ ПРИ НЕПРАВИЛЬНОМ ОТВЕТЕ (ДЕПОРТАЦИЯ)
+       ======================================================================== -->
+  <div id="deportationOverlay" class="deportation-fullscreen" role="alertdialog" aria-modal="true" aria-labelledby="deportTitle">
+    <div class="deportation-card">
+      <div class="deport-stamp">MIGRATION CONTROL • İPTAL</div>
+      <h2 class="deport-headline" id="deportTitle">ВАС ДЕПОРТИРУЮТ ОБРАТНО В КАЗАХСТАН!</h2>
+      <p class="deport-desc">
+        Неверный ответ в экзамене на знание президента Турции! Ваш чемодан уже собирают, билет в один конец оформлен.
+      </p>
+      <button type="button" class="deport-return-btn" onclick="closeDeportationOverlay()">
+        Закрыть и вернуться к букету
+      </button>
+    </div>
+  </div>
+
+  <main class="app-container">
+
+    <!-- ======================================================================
+         ЭКРАН 1: ОБЛОЖКА («С Днём Рождения»)
+         ====================================================================== -->
+    <section id="screen-cover" class="screen bg-cover active">
+      <div class="cover-grid">
+        <div class="cover-left">
+          <span class="cover-kicker">Специальный выпуск</span>
+          <h1 class="cover-title" id="coverMainTitle">С ДНЁМ РОЖДЕНИЯ,<br>ДИАС!</h1>
+
+          <svg class="cat-sticker" viewBox="0 0 360 320" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Кот в праздничном колпаке">
+            <g fill="#4A6FA5" opacity="0.45">
+              <g transform="translate(46, 86) rotate(-24)">
+                <ellipse cx="16" cy="22" rx="9" ry="7"/>
+                <circle cx="6" cy="10" r="3.5"/>
+                <circle cx="14" cy="7" r="3.5"/>
+                <circle cx="23" cy="9" r="3.5"/>
+                <circle cx="28" cy="15" r="3"/>
+              </g>
+              <g transform="translate(284, 72) rotate(22)">
+                <ellipse cx="16" cy="22" rx="9" ry="7"/>
+                <circle cx="6" cy="10" r="3.5"/>
+                <circle cx="14" cy="7" r="3.5"/>
+                <circle cx="23" cy="9" r="3.5"/>
+                <circle cx="28" cy="15" r="3"/>
+              </g>
+              <g transform="translate(292, 224) rotate(18)">
+                <ellipse cx="16" cy="22" rx="9" ry="7"/>
+                <circle cx="6" cy="10" r="3.5"/>
+                <circle cx="14" cy="7" r="3.5"/>
+                <circle cx="23" cy="9" r="3.5"/>
+                <circle cx="28" cy="15" r="3"/>
+              </g>
+            </g>
+
+            <ellipse cx="180" cy="206" rx="96" ry="82" fill="#FFFFFF"/>
+            <ellipse cx="180" cy="206" rx="88" ry="74" fill="#ECE4D5" stroke="#1B365D" stroke-width="2.5"/>
+
+            <path d="M104 156 L92 104 L142 132 Z" fill="#D8CEBE" stroke="#1B365D" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M108 148 L101 116 L132 134 Z" fill="#8DA9C4"/>
+
+            <path d="M256 156 L268 104 L218 132 Z" fill="#D8CEBE" stroke="#1B365D" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M252 148 L259 116 L228 134 Z" fill="#8DA9C4"/>
+
+            <path d="M166 138 L166 154 M180 134 L180 156 M194 138 L194 154" stroke="#7A869A" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M98 196 L120 200 M96 212 L118 212" stroke="#7A869A" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M262 196 L240 200 M264 212 L242 212" stroke="#7A869A" stroke-width="3.5" stroke-linecap="round"/>
+
+            <g transform="translate(180, 92) rotate(-6)">
+              <path d="M-36 38 L0 -62 L36 38 Z" fill="#4A6FA5" stroke="#1B365D" stroke-width="2.5" stroke-linejoin="round"/>
+              <path d="M-22 4 L13 -22 M-30 24 L24 -5" stroke="#DCE6F2" stroke-width="6" stroke-linecap="round"/>
+              <path d="M-36 38 L0 -62 L36 38 Z" fill="none" stroke="#1B365D" stroke-width="2.5" stroke-linejoin="round"/>
+              <circle cx="0" cy="-66" r="10" fill="#D5C3AA" stroke="#1B365D" stroke-width="2.5"/>
+              <rect x="-40" y="32" width="80" height="11" rx="5.5" fill="#FCFBF9" stroke="#1B365D" stroke-width="2.5"/>
+            </g>
+
+            <path d="M128 196 Q144 178 160 196" fill="none" stroke="#222831" stroke-width="4.5" stroke-linecap="round"/>
+            <path d="M200 196 Q216 178 232 196" fill="none" stroke="#222831" stroke-width="4.5" stroke-linecap="round"/>
+            <path d="M173 212 L187 212 L180 221 Z" fill="#1B365D"/>
+            <path d="M158 228 Q169 240 180 226 Q191 240 202 228" fill="none" stroke="#222831" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M173 233 Q180 252 187 233 Z" fill="#8DA9C4" stroke="#1B365D" stroke-width="2"/>
+
+            <path d="M134 218 L86 210 M134 226 L88 232" stroke="#222831" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M226 218 L274 210 M226 226 L272 232" stroke="#222831" stroke-width="2.2" stroke-linecap="round"/>
+          </svg>
+        </div>
+
+        <div class="cover-right anim-slide-up" style="animation-delay: 0.16s;">
+          <div class="edition-stamp">НОВЫЙ УРОВЕНЬ</div>
+
+          <svg class="gift-illustration" viewBox="0 0 420 340" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Подарочная коробка с воздушными шарами">
+            <circle cx="210" cy="180" r="138" fill="#DCE6F2" opacity="0.65"/>
+
+            <path d="M78 152 Q98 205 130 240" stroke="#1B365D" stroke-width="1.8" stroke-dasharray="4 3"/>
+            <path d="M114 108 Q126 172 148 220" stroke="#1B365D" stroke-width="1.8"/>
+            <path d="M310 106 Q294 172 275 220" stroke="#1B365D" stroke-width="1.8"/>
+            <path d="M346 152 Q326 205 292 240" stroke="#1B365D" stroke-width="1.8" stroke-dasharray="4 3"/>
+
+            <g class="balloon-float-slow">
+              <ellipse cx="76" cy="116" rx="28" ry="35" transform="rotate(-14 76 116)" fill="#1B365D" stroke="#132642" stroke-width="2.5"/>
+            </g>
+            <g class="balloon-float-fast">
+              <ellipse cx="114" cy="72" rx="26" ry="33" transform="rotate(-6 114 72)" fill="#8DA9C4" stroke="#1B365D" stroke-width="2.5"/>
+            </g>
+            <g class="balloon-float-slow">
+              <ellipse cx="308" cy="72" rx="26" ry="33" transform="rotate(8 308 72)" fill="#4A6FA5" stroke="#1B365D" stroke-width="2.5"/>
+            </g>
+            <g class="balloon-float-fast">
+              <ellipse cx="346" cy="116" rx="28" ry="35" transform="rotate(15 346 116)" fill="#1B365D" stroke="#132642" stroke-width="2.5"/>
+            </g>
+
+            <g transform="translate(0, 12)">
+              <rect x="116" y="170" width="188" height="138" rx="10" fill="#8DA9C4" stroke="#1B365D" stroke-width="2.5"/>
+              <rect x="118" y="170" width="184" height="12" fill="#4A6FA5" opacity="0.35"/>
+              <rect x="193" y="170" width="34" height="138" fill="#1B365D"/>
+
+              <rect x="106" y="138" width="208" height="34" rx="8" fill="#DCE6F2" stroke="#1B365D" stroke-width="2.5"/>
+              <rect x="191" y="138" width="38" height="34" fill="#1B365D"/>
+
+              <path d="M210 138 C166 86 118 106 150 138 Z" fill="#1B365D" stroke="#132642" stroke-width="2.5" stroke-linejoin="round"/>
+              <path d="M210 138 C254 86 302 106 270 138 Z" fill="#1B365D" stroke="#132642" stroke-width="2.5" stroke-linejoin="round"/>
+              <path d="M210 138 C182 98 152 114 176 138 Z" fill="#4A6FA5"/>
+              <path d="M210 138 C238 98 268 114 244 138 Z" fill="#4A6FA5"/>
+              <rect x="195" y="123" width="30" height="22" rx="6" fill="#1B365D" stroke="#D5C3AA" stroke-width="2"/>
+            </g>
+          </svg>
+
+          <button class="btn-primary" onclick="navigateTo('surprise')">
+            <span>Открыть сюрприз</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14M13 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         ЭКРАН 2: МЕНЮ ВЫБОРА («Твой сюрприз» — 4 КАРТОЧКИ)
+         ====================================================================== -->
+    <section id="screen-surprise" class="screen bg-gingham">
+      <div class="surprise-header anim-drop-down" style="animation-delay: 0.04s;">
+        <h2 class="surprise-title">Сюрприз ко дню рождения специально для тебя, Диас!</h2>
+      </div>
+
+      <div class="cards-row">
+        <!-- 01. Письмо -->
+        <div class="surprise-card anim-slide-up" style="animation-delay: 0.1s;" onclick="navigateTo('letter')" role="button" tabindex="0" aria-label="Открыть письмо">
+          <span class="card-index">01</span>
+          <div class="shield-frame">
+            <div class="shield-inner">
+              <svg viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="18" y="34" width="104" height="74" rx="10" fill="#8DA9C4" stroke="#1B365D" stroke-width="3"/>
+                <path d="M20 38 L70 78 L120 38" fill="#DCE6F2" stroke="#1B365D" stroke-width="3" stroke-linejoin="round"/>
+                <path d="M20 104 L54 70 M120 104 L86 70" stroke="#1B365D" stroke-width="2.5" stroke-linecap="round"/>
+                <circle cx="70" cy="76" r="13" fill="#1B365D"/>
+                <text x="70" y="81" text-anchor="middle" fill="#FCFBF9" font-family="Unbounded" font-weight="700" font-size="11">Д</text>
+              </svg>
+            </div>
+          </div>
+          <span class="card-label-btn">Письмо</span>
+        </div>
+
+        <!-- 02. Букет -->
+        <div class="surprise-card anim-slide-up" style="animation-delay: 0.2s;" onclick="navigateTo('bouquet')" role="button" tabindex="0" aria-label="Открыть букет">
+          <span class="card-index">02</span>
+          <div class="shield-frame">
+            <div class="shield-inner">
+              <svg viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="34" y="26" width="30" height="54" rx="4" transform="rotate(-24 34 26)" fill="#6BBF8A" stroke="#1B365D" stroke-width="2.5"/>
+                <rect x="55" y="18" width="30" height="56" rx="4" fill="#95D5AC" stroke="#1B365D" stroke-width="2.5"/>
+                <rect x="78" y="22" width="30" height="54" rx="4" transform="rotate(24 78 22)" fill="#6BBF8A" stroke="#1B365D" stroke-width="2.5"/>
+                <text x="65" y="45" fill="#1B365D" font-family="Unbounded" font-weight="700" font-size="12">$</text>
+                <path d="M32 62 L108 62 L84 122 L56 122 Z" fill="#D5C3AA" stroke="#1B365D" stroke-width="2.5" stroke-linejoin="round"/>
+                <path d="M40 62 L100 62 L80 112 L60 112 Z" fill="#4A6FA5" stroke="#1B365D" stroke-width="2.5" stroke-linejoin="round"/>
+                <rect x="54" y="96" width="32" height="10" rx="5" fill="#1B365D"/>
+              </svg>
+            </div>
+          </div>
+          <span class="card-label-btn">Букет</span>
+        </div>
+
+        <!-- 03. Торт -->
+        <div class="surprise-card anim-slide-up" style="animation-delay: 0.3s;" onclick="navigateTo('cake')" role="button" tabindex="0" aria-label="Открыть торт">
+          <span class="card-index">03</span>
+          <div class="shield-frame">
+            <div class="shield-inner">
+              <svg viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="20" y="110" width="100" height="8" rx="4" fill="#1B365D"/>
+                <rect x="28" y="78" width="84" height="32" rx="6" fill="#8DA9C4" stroke="#1B365D" stroke-width="2.5"/>
+                <path d="M28 84 Q42 93 56 84 Q70 93 84 84 Q98 93 112 84" stroke="#FCFBF9" stroke-width="3.5" fill="none"/>
+                <rect x="42" y="50" width="56" height="28" rx="6" fill="#DCE6F2" stroke="#1B365D" stroke-width="2.5"/>
+                <rect x="54" y="30" width="6" height="20" rx="2" fill="#FCFBF9" stroke="#1B365D" stroke-width="2"/>
+                <rect x="67" y="26" width="6" height="24" rx="2" fill="#4A6FA5" stroke="#1B365D" stroke-width="2"/>
+                <rect x="80" y="30" width="6" height="20" rx="2" fill="#FCFBF9" stroke="#1B365D" stroke-width="2"/>
+                <path d="M57 18 Q61 24 57 28 Q53 24 57 18 Z" fill="#E07A5F"/>
+                <path d="M70 14 Q74 20 70 24 Q66 20 70 14 Z" fill="#E07A5F"/>
+                <path d="M83 18 Q87 24 83 28 Q79 24 83 18 Z" fill="#E07A5F"/>
+              </svg>
+            </div>
+          </div>
+          <span class="card-label-btn">Торт</span>
+        </div>
+
+        <!-- 04. Видеопоздравление -->
+        <div class="surprise-card anim-slide-up" style="animation-delay: 0.4s;" onclick="navigateTo('video')" role="button" tabindex="0" aria-label="Открыть видеопоздравление">
+          <span class="card-index">04</span>
+          <div class="shield-frame">
+            <div class="shield-inner">
+              <svg viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Хлопушка / кинокадр -->
+                <rect x="22" y="46" width="96" height="66" rx="10" fill="#4A6FA5" stroke="#1B365D" stroke-width="3"/>
+                <g transform="translate(22, 30) rotate(-6)">
+                  <rect x="0" y="0" width="96" height="16" rx="5" fill="#1B365D"/>
+                  <path d="M14 0 L24 16 M38 0 L48 16 M62 0 L72 16 M84 0 L92 12" stroke="#FCFBF9" stroke-width="4"/>
+                </g>
+                <circle cx="70" cy="79" r="20" fill="#FCFBF9" stroke="#1B365D" stroke-width="2.5"/>
+                <polygon points="65,70 65,88 80,79" fill="#E07A5F" stroke="#1B365D" stroke-width="2" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+          <span class="card-label-btn">Видео</span>
+        </div>
+      </div>
+
+      <div class="btn-back-wrap">
+        <button class="btn-back" onclick="navigateTo('cover')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          <span>Назад</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         ЭКРАН 3: ПИСЬМО («Письмо»)
+         ====================================================================== -->
+    <section id="screen-letter" class="screen bg-stationery">
+      <div class="letter-layout">
+        <div class="envelope-box anim-slide-left" style="animation-delay: 0.06s;">
+          <svg viewBox="0 0 420 380" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Раскрытый конверт">
+            <defs>
+              <pattern id="envGingham" width="32" height="32" patternUnits="userSpaceOnUse">
+                <rect width="32" height="32" fill="#F6F2EA"/>
+                <rect width="16" height="32" fill="#4A6FA5" fill-opacity="0.24"/>
+                <rect width="32" height="16" fill="#1B365D" fill-opacity="0.22"/>
+              </pattern>
+            </defs>
+
+            <path d="M36 146 L210 26 L384 146 Z" fill="url(#envGingham)" stroke="#1B365D" stroke-width="3" stroke-linejoin="round"/>
+            <rect x="36" y="146" width="348" height="208" rx="10" fill="#DCE6F2" stroke="#1B365D" stroke-width="3"/>
+            <path d="M36 146 L195 250 L36 354 Z" fill="url(#envGingham)" stroke="#1B365D" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M384 146 L225 250 L384 354 Z" fill="url(#envGingham)" stroke="#1B365D" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M36 354 L210 226 L384 354 Z" fill="url(#envGingham)" stroke="#1B365D" stroke-width="3" stroke-linejoin="round"/>
+
+            <g transform="translate(88, 128) rotate(-18)">
+              <path d="M0 0 C-34 -32 -60 -6 -22 14 Z" fill="#1B365D"/>
+              <path d="M0 0 C34 -32 60 -6 22 14 Z" fill="#1B365D"/>
+              <path d="M-8 10 L-24 54 L-10 46 L-2 12 Z" fill="#1B365D"/>
+              <path d="M8 10 L24 54 L10 46 L2 12 Z" fill="#1B365D"/>
+              <circle cx="0" cy="4" r="9" fill="#D5C3AA" stroke="#1B365D" stroke-width="2.5"/>
+            </g>
+
+            <g transform="translate(92, 272)">
+              <circle cx="0" cy="0" r="30" fill="#1B365D" stroke="#FCFBF9" stroke-width="3"/>
+              <circle cx="0" cy="0" r="22" fill="none" stroke="#D5C3AA" stroke-width="1.5"/>
+              <text x="0" y="7" text-anchor="middle" fill="#FCFBF9" font-family="Unbounded" font-weight="700" font-size="18">Д</text>
+            </g>
+          </svg>
+        </div>
+
+        <article class="letter-paper anim-slide-up" style="animation-delay: 0.2s;">
+          <div class="washi-tape tape-top-left"></div>
+          <div class="washi-tape tape-top-right"></div>
+
+          <div class="letter-header">
+            <h2 class="letter-heading" id="letterHeadingText">С Днём Рождения, Диас!</h2>
+            <span class="letter-date">Личное письмо</span>
+          </div>
+
+          <div class="letter-body" id="letterBodyContainer">
+            <p>Диас, поздравляю тебя с днём рождения! Спасибо тебе за то, что всегда остаёшься надёжной опорой, примером и человеком, на которого можно положиться в любой ситуации.</p>
+            <p>Желаю тебе железного здоровья, мощной энергии и уверенности в каждом шаге. Пусть все цели, которые ты перед собой ставишь, достигаются без лишних преград, проекты приносят крутой результат, а рядом всегда будут верные люди.</p>
+            <p>Только вперёд и только вверх, Диас! С праздником!</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="btn-back-wrap">
+        <button class="btn-back" onclick="navigateTo('surprise')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          <span>Назад</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         ЭКРАН 4: ДЕНЕЖНЫЙ БУКЕТ («Букет»)
+         ====================================================================== -->
+    <section id="screen-bouquet" class="screen bg-stationery">
+      <div class="bouquet-layout">
+        <div class="bouquet-art anim-slide-up" style="animation-delay: 0.08s;" onclick="handleBouquetClick()" role="button" tabindex="0" aria-label="Нажми на букет несколько раз">
+          <svg id="moneyBouquetSvg" class="bouquet-sway" viewBox="0 0 420 430" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Букет из денежных купюр">
+            <circle cx="205" cy="195" r="154" fill="#DCE6F2" opacity="0.7"/>
+
+            <path d="M74 165 L210 68 L346 165 L254 362 L166 362 Z" fill="#1B365D" stroke="#132642" stroke-width="3" stroke-linejoin="round"/>
+            <path d="M92 172 L210 90 L328 172 L248 358 L172 358 Z" fill="#D5C3AA" stroke="#1B365D" stroke-width="2.5" stroke-linejoin="round"/>
+
+            <g transform="translate(135, 195) rotate(-38)">
+              <rect x="-32" y="-115" width="64" height="130" rx="5" fill="#6BBF8A" stroke="#1B365D" stroke-width="2.5"/>
+              <rect x="-24" y="-106" width="48" height="112" rx="3" fill="none" stroke="#1B4332" stroke-width="1.5" stroke-dasharray="4 2"/>
+              <circle cx="0" cy="-55" r="14" fill="#D8F3DC" stroke="#1B4332" stroke-width="1.5"/>
+              <text x="-11" y="-51" fill="#1B4332" font-family="Unbounded" font-weight="700" font-size="10">100</text>
+            </g>
+
+            <g transform="translate(160, 185) rotate(-22)">
+              <rect x="-32" y="-122" width="64" height="136" rx="5" fill="#95D5AC" stroke="#1B365D" stroke-width="2.5"/>
+              <rect x="-24" y="-113" width="48" height="118" rx="3" fill="none" stroke="#1B4332" stroke-width="1.5"/>
+              <circle cx="0" cy="-60" r="15" fill="#D8F3DC" stroke="#1B4332" stroke-width="1.5"/>
+              <text x="-11" y="-56" fill="#1B4332" font-family="Unbounded" font-weight="700" font-size="10">100</text>
+            </g>
+
+            <g transform="translate(185, 180) rotate(-8)">
+              <rect x="-32" y="-128" width="64" height="140" rx="5" fill="#6BBF8A" stroke="#1B365D" stroke-width="2.5"/>
+              <rect x="-24" y="-119" width="48" height="122" rx="3" fill="none" stroke="#1B4332" stroke-width="1.5"/>
+              <circle cx="0" cy="-65" r="15" fill="#D8F3DC" stroke="#1B4332" stroke-width="1.5"/>
+              <text x="-6" y="-60" fill="#1B4332" font-family="Unbounded" font-weight="700" font-size="13">$</text>
+            </g>
+
+            <g transform="translate(210, 178)">
+              <rect x="-34" y="-132" width="68" height="144" rx="5" fill="#B7E4C7" stroke="#1B365D" stroke-width="3"/>
+              <rect x="-25" y="-122" width="50" height="124" rx="3" fill="none" stroke="#1B4332" stroke-width="1.8"/>
+              <circle cx="0" cy="-66" r="17" fill="#FCFBF9" stroke="#1B4332" stroke-width="2"/>
+              <text x="-13" y="-62" fill="#1B4332" font-family="Unbounded" font-weight="700" font-size="11">100</text>
+              <text x="-16" y="-102" fill="#1B4332" font-family="Golos Text" font-weight="700" font-size="9">CASH</text>
+            </g>
+
+            <g transform="translate(235, 180) rotate(9)">
+              <rect x="-32" y="-128" width="64" height="140" rx="5" fill="#6BBF8A" stroke="#1B365D" stroke-width="2.5"/>
+              <rect x="-24" y="-119" width="48" height="122" rx="3" fill="none" stroke="#1B4332" stroke-width="1.5"/>
+              <circle cx="0" cy="-65" r="15" fill="#D8F3DC" stroke="#1B4332" stroke-width="1.5"/>
+              <text x="-6" y="-60" fill="#1B4332" font-family="Unbounded" font-weight="700" font-size="13">$</text>
+            </g>
+
+            <g transform="translate(260, 185) rotate(23)">
+              <rect x="-32" y="-122" width="64" height="136" rx="5" fill="#95D5AC" stroke="#1B365D" stroke-width="2.5"/>
+              <rect x="-24" y="-113" width="48" height="118" rx="3" fill="none" stroke="#1B4332" stroke-width="1.5"/>
+              <circle cx="0" cy="-60" r="15" fill="#D8F3DC" stroke="#1B4332" stroke-width="1.5"/>
+              <text x="-11" y="-56" fill="#1B4332" font-family="Unbounded" font-weight="700" font-size="10">100</text>
+            </g>
+
+            <g transform="translate(285, 195) rotate(38)">
+              <rect x="-32" y="-115" width="64" height="130" rx="5" fill="#6BBF8A" stroke="#1B365D" stroke-width="2.5"/>
+              <rect x="-24" y="-106" width="48" height="112" rx="3" fill="none" stroke="#1B4332" stroke-width="1.5" stroke-dasharray="4 2"/>
+              <circle cx="0" cy="-55" r="14" fill="#D8F3DC" stroke="#1B4332" stroke-width="1.5"/>
+              <text x="-11" y="-51" fill="#1B4332" font-family="Unbounded" font-weight="700" font-size="10">100</text>
+            </g>
+
+            <path d="M98 198 L210 264 L172 394 L142 394 Z" fill="#4A6FA5" stroke="#1B365D" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M322 198 L210 264 L248 394 L278 394 Z" fill="#3B5B8C" stroke="#1B365D" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M124 224 L210 272 L296 224 L254 402 L166 402 Z" fill="#E3D5C1" stroke="#1B365D" stroke-width="3" stroke-linejoin="round"/>
+
+            <rect x="166" y="312" width="88" height="20" rx="6" fill="#1B365D"/>
+            <path d="M210 322 C172 294 148 318 182 330 Z" fill="#4A6FA5" stroke="#1B365D" stroke-width="2.5"/>
+            <path d="M210 322 C248 294 272 318 238 330 Z" fill="#4A6FA5" stroke="#1B365D" stroke-width="2.5"/>
+            <path d="M198 330 L174 396 L192 388 L206 332 Z" fill="#1B365D"/>
+            <path d="M222 330 L246 396 L228 388 L214 332 Z" fill="#1B365D"/>
+            <rect x="198" y="313" width="24" height="18" rx="5" fill="#D5C3AA" stroke="#1B365D" stroke-width="2"/>
+          </svg>
+
+          <div class="bouquet-hint-badge" id="bouquetHintBadge">
+            <span>👆 Нажми на букет несколько раз</span>
+          </div>
+        </div>
+
+        <div class="bouquet-card anim-slide-right" style="animation-delay: 0.22s;">
+          <span class="bouquet-tag">Практичный подарок</span>
+          <p class="bouquet-text" id="bouquetTextContent">
+            Обычные цветы быстро завянут, поэтому держи правильный букет! Пусть твой бюджет всегда растёт, доходы только умножаются, а финансов с запасом хватает на любые идеи, цели и мечты.
+          </p>
+        </div>
+      </div>
+
+      <div class="btn-back-wrap">
+        <button class="btn-back" onclick="navigateTo('surprise')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          <span>Назад</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         ЭКРАН 5: ЭПИЧНЫЙ ТОРТ, ФОТО (POLAROID + ЗЕРКАЛО) И ПРОИГРЫВАТЕЛЬ
+         ====================================================================== -->
+    <section id="screen-cake" class="screen bg-stripes">
+      <div class="top-valance anim-drop-down" aria-hidden="true">
+        <svg width="100%" height="36" preserveAspectRatio="none" viewBox="0 0 1200 36">
+          <path d="M0,0 L1200,0 L1200,20 Q1150,36 1100,20 Q1050,36 1000,20 Q950,36 900,20 Q850,36 800,20 Q750,36 700,20 Q650,36 600,20 Q550,36 500,20 Q450,36 400,20 Q350,36 300,20 Q250,36 200,20 Q150,36 100,20 Q50,36 0,20 Z" fill="#8DA9C4" stroke="#1B365D" stroke-width="2.5"/>
+        </svg>
+      </div>
+
+      <div class="party-garland garland-sway" aria-hidden="true">
+        <svg width="100%" height="62" preserveAspectRatio="none" viewBox="0 0 1200 62" fill="none">
+          <path d="M-10 8 Q300 44 600 18 Q900 44 1210 8" stroke="#1B365D" stroke-width="2.5"/>
+          <polygon points="60,15 96,19 76,48" fill="#1B365D"/>
+          <polygon points="145,23 183,26 162,55" fill="#D5C3AA" stroke="#1B365D" stroke-width="1.5"/>
+          <polygon points="235,28 273,29 253,58" fill="#4A6FA5"/>
+          <polygon points="325,29 363,28 344,57" fill="#FCFBF9" stroke="#1B365D" stroke-width="1.5"/>
+          <polygon points="415,26 453,23 435,52" fill="#E07A5F"/>
+          <polygon points="505,21 543,19 524,48" fill="#1B365D"/>
+          <polygon points="655,19 693,21 674,48" fill="#D5C3AA" stroke="#1B365D" stroke-width="1.5"/>
+          <polygon points="745,23 783,26 764,53" fill="#4A6FA5"/>
+          <polygon points="835,28 873,29 854,58" fill="#FCFBF9" stroke="#1B365D" stroke-width="1.5"/>
+          <polygon points="925,29 963,28 944,57" fill="#E07A5F"/>
+          <polygon points="1015,26 1053,23 1034,52" fill="#1B365D"/>
+          <polygon points="1105,19 1141,15 1123,45" fill="#4A6FA5"/>
+        </svg>
+      </div>
+
+      <div class="cake-screen-wrapper">
+        <div class="cake-stage-banner anim-drop-down" style="animation-delay: 0.06s;">
+          <span class="cake-stage-banner-dot"></span>
+          <span class="cake-stage-banner-text">Главный праздничный стол • Диас</span>
+          <span class="cake-stage-banner-dot"></span>
+        </div>
+
+        <div class="cake-top-stage">
+          <!-- Блок для 3 фотографий -->
+          <div class="photo-gallery-zone">
+            <div class="polaroid-stack">
+              <div class="photo-slot polaroid-frame polaroid-1 anim-slide-up" style="animation-delay: 0.1s;" onclick="triggerPhotoUpload('photo1')" title="Нажми, чтобы выбрать или заменить фото">
+                <div class="washi-tape"></div>
+                <div class="polaroid-img-box" id="slot-photo1">
+                  <div class="photo-placeholder">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1B365D" stroke-width="2">
+                      <rect x="3" y="5" width="18" height="14" rx="3"/>
+                      <circle cx="8.5" cy="10.5" r="1.5"/>
+                      <path d="M21 15l-5-5L5 19"/>
+                    </svg>
+                    <span>Добавить фото 1</span>
+                  </div>
+                </div>
+                <span class="polaroid-caption">Диас</span>
+                <span class="photo-edit-badge">Заменить</span>
+              </div>
+
+              <div class="photo-slot polaroid-frame polaroid-2 anim-slide-up" style="animation-delay: 0.22s;" onclick="triggerPhotoUpload('photo2')" title="Нажми, чтобы выбрать или заменить фото">
+                <div class="washi-tape"></div>
+                <div class="polaroid-img-box" id="slot-photo2">
+                  <div class="photo-placeholder">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1B365D" stroke-width="2">
+                      <rect x="3" y="5" width="18" height="14" rx="3"/>
+                      <circle cx="8.5" cy="10.5" r="1.5"/>
+                      <path d="M21 15l-5-5L5 19"/>
+                    </svg>
+                    <span>Добавить фото 2</span>
+                  </div>
+                </div>
+                <span class="polaroid-caption">Вместе</span>
+                <span class="photo-edit-badge">Заменить</span>
+              </div>
+            </div>
+
+            <!-- Овальная винтажная рамка-ЗЕРКАЛО для детского фото -->
+            <div class="mirror-wrapper anim-slide-up" style="animation-delay: 0.34s;" onclick="triggerPhotoUpload('photo3')" title="Детское фото в рамке-зеркале (нажми, чтобы заменить)">
+              <svg class="mirror-crest" width="72" height="22" viewBox="0 0 72 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 20 C15 7, 26 16, 36 4 C46 16, 57 7, 66 20 Z" fill="#8DA9C4" stroke="#1B365D" stroke-width="2" stroke-linejoin="round"/>
+                <circle cx="36" cy="12" r="3.5" fill="#FCFBF9" stroke="#1B365D" stroke-width="1.8"/>
+              </svg>
+
+              <div class="oval-frame">
+                <div class="oval-img-box" id="slot-photo3">
+                  <div class="photo-placeholder">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1B365D" stroke-width="2">
+                      <rect x="3" y="5" width="18" height="14" rx="3"/>
+                      <circle cx="8.5" cy="10.5" r="1.5"/>
+                      <path d="M21 15l-5-5L5 19"/>
+                    </svg>
+                    <span>Детское фото</span>
+                  </div>
+                </div>
+                <span class="photo-edit-badge">Заменить</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ЭПИЧНЫЙ ТРЁХЪЯРУСНЫЙ ПРАЗДНИЧНЫЙ ТОРТ -->
+          <div class="cake-center-zone anim-slide-up" id="cakeCenterCard" style="animation-delay: 0.18s;">
+            <div class="cake-wish-banner" id="cakeWishBanner">
+              ЖЕЛАНИЕ ЗАГАДАНО! С ДНЁМ РОЖДЕНИЯ, ДИАС!
+            </div>
+
+            <div class="cake-svg-wrapper" id="interactiveCake" onclick="toggleCandles()" role="button" tabindex="0" aria-label="Праздничный трёхъярусный торт со свечами">
+              <svg viewBox="0 0 540 430" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <radialGradient id="candleWarmGlow" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.45"/>
+                    <stop offset="65%" stop-color="#FDE68A" stop-opacity="0.16"/>
+                    <stop offset="100%" stop-color="#FDE68A" stop-opacity="0"/>
+                  </radialGradient>
+                </defs>
+
+                <path d="M68 188 Q84 245 96 310" stroke="#1B365D" stroke-width="2"/>
+                <path d="M42 224 Q68 270 92 318" stroke="#1B365D" stroke-width="2" stroke-dasharray="4 3"/>
+                <g class="balloon-float-slow">
+                  <ellipse cx="64" cy="146" rx="28" ry="36" transform="rotate(-12 64 146)" fill="#4A6FA5" stroke="#1B365D" stroke-width="2.5"/>
+                </g>
+                <g class="balloon-float-fast">
+                  <ellipse cx="36" cy="186" rx="24" ry="31" transform="rotate(-20 36 186)" fill="#D5C3AA" stroke="#1B365D" stroke-width="2.5"/>
+                </g>
+
+                <path d="M472 182 Q456 242 442 310" stroke="#1B365D" stroke-width="2"/>
+                <path d="M502 218 Q476 266 446 318" stroke="#1B365D" stroke-width="2" stroke-dasharray="4 3"/>
+                <g class="balloon-float-fast">
+                  <ellipse cx="474" cy="142" rx="28" ry="36" transform="rotate(12 474 142)" fill="#1B365D" stroke="#132642" stroke-width="2.5"/>
+                </g>
+                <g class="balloon-float-slow">
+                  <ellipse cx="504" cy="182" rx="24" ry="31" transform="rotate(20 504 182)" fill="#8DA9C4" stroke="#1B365D" stroke-width="2.5"/>
+                </g>
+
+                <ellipse class="candle-halo" cx="270" cy="112" rx="138" ry="56" fill="url(#candleWarmGlow)"/>
+
+                <g class="cake-topper-flag">
+                  <line x1="176" y1="34" x2="176" y2="128" stroke="#8C6D46" stroke-width="3.5" stroke-linecap="round"/>
+                  <line x1="364" y1="34" x2="364" y2="128" stroke="#8C6D46" stroke-width="3.5" stroke-linecap="round"/>
+                  <path d="M176 42 Q270 60 364 42" stroke="#1B365D" stroke-width="2.5" fill="none"/>
+                  <g transform="translate(194, 45) rotate(5)">
+                    <polygon points="0,0 32,0 16,32" fill="#1B365D"/>
+                    <text x="16" y="17" text-anchor="middle" fill="#FCFBF9" font-family="Unbounded" font-weight="800" font-size="11">Д</text>
+                  </g>
+                  <g transform="translate(234, 49) rotate(2)">
+                    <polygon points="0,0 32,0 16,32" fill="#E07A5F" stroke="#1B365D" stroke-width="1.5"/>
+                    <text x="16" y="17" text-anchor="middle" fill="#FCFBF9" font-family="Unbounded" font-weight="800" font-size="11">И</text>
+                  </g>
+                  <g transform="translate(274, 49) rotate(-2)">
+                    <polygon points="0,0 32,0 16,32" fill="#4A6FA5" stroke="#1B365D" stroke-width="1.5"/>
+                    <text x="16" y="17" text-anchor="middle" fill="#FCFBF9" font-family="Unbounded" font-weight="800" font-size="11">А</text>
+                  </g>
+                  <g transform="translate(314, 45) rotate(-5)">
+                    <polygon points="0,0 32,0 16,32" fill="#1B365D"/>
+                    <text x="16" y="17" text-anchor="middle" fill="#FCFBF9" font-family="Unbounded" font-weight="800" font-size="11">С</text>
+                  </g>
+                </g>
+
+                <ellipse cx="270" cy="390" rx="194" ry="20" fill="#FCFBF9" stroke="#1B365D" stroke-width="3"/>
+                <path d="M236 392 L222 414 L318 414 L304 392 Z" fill="#DCE6F2" stroke="#1B365D" stroke-width="2.5" stroke-linejoin="round"/>
+                <rect x="202" y="412" width="136" height="10" rx="5" fill="#1B365D"/>
+
+                <rect x="104" y="294" width="332" height="94" rx="18" fill="#1B365D" stroke="#132642" stroke-width="3"/>
+                <path d="M106 310 Q132 332 158 310 Q184 334 210 310 Q236 332 262 310 Q288 334 314 310 Q340 332 366 310 Q392 334 434 310 L434 302 Q434 294 416 294 L124 294 Q106 294 106 302 Z" fill="#FCFBF9"/>
+                <path d="M118 358 Q156 376 194 358 Q232 376 270 358 Q308 376 346 358 Q384 376 422 358" stroke="#D5C3AA" stroke-width="4" stroke-dasharray="2 9" stroke-linecap="round"/>
+
+                <rect x="142" y="206" width="256" height="88" rx="16" fill="#4A6FA5" stroke="#1B365D" stroke-width="3"/>
+                <path d="M144 222 Q168 242 192 222 Q216 244 240 222 Q264 242 288 222 Q312 244 336 222 Q360 242 396 222 L396 214 Q396 206 378 206 L162 206 Q144 206 144 214 Z" fill="#DCE6F2"/>
+                <rect x="174" y="246" width="192" height="34" rx="9" fill="#FCFBF9" stroke="#1B365D" stroke-width="2.5"/>
+                <text x="270" y="268" text-anchor="middle" fill="#1B365D" font-family="Unbounded" font-weight="800" font-size="12" letter-spacing="0.5">С ДНЁМ РОЖДЕНИЯ</text>
+
+                <rect x="182" y="130" width="176" height="76" rx="15" fill="#8DA9C4" stroke="#1B365D" stroke-width="3"/>
+                <path d="M184 144 Q206 162 228 144 Q250 164 272 144 Q294 162 316 144 Q338 164 356 144 L356 138 Q356 130 340 130 L200 130 Q184 130 184 138 Z" fill="#FCFBF9"/>
+                <circle cx="152" cy="204" r="6" fill="#E07A5F" stroke="#1B365D" stroke-width="1.8"/>
+                <circle cx="388" cy="204" r="6" fill="#E07A5F" stroke="#1B365D" stroke-width="1.8"/>
+                <circle cx="116" cy="292" r="7" fill="#E07A5F" stroke="#1B365D" stroke-width="1.8"/>
+                <circle cx="424" cy="292" r="7" fill="#E07A5F" stroke="#1B365D" stroke-width="1.8"/>
+
+                <g transform="translate(202, 86)">
+                  <rect x="0" y="14" width="11" height="30" rx="3" fill="#FCFBF9" stroke="#1B365D" stroke-width="2.2"/>
+                  <path d="M1 22 L10 17 M1 32 L10 27" stroke="#4A6FA5" stroke-width="2.5"/>
+                  <path class="candle-flame" d="M5.5 -4 C11 5 9.5 13 5.5 13 C1.5 13 0 5 5.5 -4 Z" fill="#E07A5F"/>
+                  <path class="smoke-trail" d="M5.5 8 Q1 0 6 -10 Q10 -20 5 -30" stroke="#64748B" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                </g>
+
+                <g transform="translate(232, 80)">
+                  <rect x="0" y="14" width="11" height="36" rx="3" fill="#DCE6F2" stroke="#1B365D" stroke-width="2.2"/>
+                  <path d="M1 22 L10 17 M1 32 L10 27 M1 42 L10 37" stroke="#1B365D" stroke-width="2.5"/>
+                  <path class="candle-flame delay-1" d="M5.5 -5 C11.5 4 10 13 5.5 13 C1 13 -0.5 4 5.5 -5 Z" fill="#E07A5F"/>
+                  <path class="smoke-trail" d="M5.5 8 Q10 -2 5 -12 Q1 -22 6 -32" stroke="#64748B" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                </g>
+
+                <g transform="translate(264, 72)">
+                  <rect x="0" y="14" width="12" height="44" rx="3.5" fill="#FCFBF9" stroke="#1B365D" stroke-width="2.5"/>
+                  <path d="M1 23 L11 18 M1 34 L11 29 M1 45 L11 40" stroke="#E07A5F" stroke-width="2.8"/>
+                  <path class="candle-flame delay-2" d="M6 -7 C13 4 11 13 6 13 C1 13 -1 4 6 -7 Z" fill="#E07A5F"/>
+                  <path class="smoke-trail" d="M6 8 Q1 -4 7 -15 Q12 -26 6 -38" stroke="#64748B" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+                </g>
+
+                <g transform="translate(297, 80)">
+                  <rect x="0" y="14" width="11" height="36" rx="3" fill="#DCE6F2" stroke="#1B365D" stroke-width="2.2"/>
+                  <path d="M1 22 L10 17 M1 32 L10 27 M1 42 L10 37" stroke="#1B365D" stroke-width="2.5"/>
+                  <path class="candle-flame delay-3" d="M5.5 -5 C11.5 4 10 13 5.5 13 C1 13 -0.5 4 5.5 -5 Z" fill="#E07A5F"/>
+                  <path class="smoke-trail" d="M5.5 8 Q1 -2 6 -12 Q10 -22 5 -32" stroke="#64748B" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                </g>
+
+                <g transform="translate(327, 86)">
+                  <rect x="0" y="14" width="11" height="30" rx="3" fill="#FCFBF9" stroke="#1B365D" stroke-width="2.2"/>
+                  <path d="M1 22 L10 17 M1 32 L10 27" stroke="#4A6FA5" stroke-width="2.5"/>
+                  <path class="candle-flame delay-4" d="M5.5 -4 C11 5 9.5 13 5.5 13 C1.5 13 0 5 5.5 -4 Z" fill="#E07A5F"/>
+                  <path class="smoke-trail" d="M5.5 8 Q10 0 5 -10 Q1 -20 6 -30" stroke="#64748B" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                </g>
+              </svg>
+            </div>
+
+            <div class="cake-action-row">
+              <button type="button" class="btn-blow-candles" id="blowCandlesBtn" onclick="toggleCandles()">
+                <span id="blowCandlesIcon">💨</span>
+                <span id="blowCandlesLabel">Задуть свечи и загадать желание</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Нижняя сцена: Виниловый проигрыватель в коробке со звукоснимателем -->
+        <div class="vinyl-box-container anim-slide-up" style="animation-delay: 0.36s;">
+          <div class="vinyl-box-lid">
+            <div class="lid-ribbon-v"></div>
+            <div class="lid-ribbon-h"></div>
+            <div class="lid-cat-badge">
+              <svg viewBox="0 0 200 200" width="128" height="128" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="100" cy="122" rx="60" ry="50" fill="#ECE4D5" stroke="#1B365D" stroke-width="3"/>
+                <path d="M52 88 L44 54 L76 72 Z" fill="#D8CEBE" stroke="#1B365D" stroke-width="2.5" stroke-linejoin="round"/>
+                <path d="M148 88 L156 54 L124 72 Z" fill="#D8CEBE" stroke="#1B365D" stroke-width="2.5" stroke-linejoin="round"/>
+                <g transform="translate(100, 48) rotate(-5)">
+                  <path d="M-24 24 L0 -42 L24 24 Z" fill="#4A6FA5" stroke="#1B365D" stroke-width="2.5" stroke-linejoin="round"/>
+                  <circle cx="0" cy="-45" r="7" fill="#D5C3AA" stroke="#1B365D" stroke-width="2"/>
+                  <rect x="-26" y="20" width="52" height="8" rx="4" fill="#FCFBF9" stroke="#1B365D" stroke-width="2.5"/>
+                </g>
+                <path d="M66 116 Q78 102 90 116" stroke="#222831" stroke-width="4" stroke-linecap="round"/>
+                <path d="M110 116 Q122 102 134 116" stroke="#222831" stroke-width="4" stroke-linecap="round"/>
+                <path d="M94 126 L106 126 L100 133 Z" fill="#1B365D"/>
+                <path d="M84 136 Q92 146 100 135 Q108 146 116 136" stroke="#222831" stroke-width="3" stroke-linecap="round"/>
+                <path d="M95 140 Q100 153 105 140 Z" fill="#8DA9C4" stroke="#1B365D" stroke-width="2"/>
+              </svg>
+            </div>
+          </div>
+
+          <div class="vinyl-box-tray">
+            <div class="music-notes-layer" id="musicNotesLayer"></div>
+
+            <svg class="turntable-tonearm" id="vinylTonearm" viewBox="0 0 60 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="42" cy="18" r="12" fill="#D5C3AA" stroke="#1B365D" stroke-width="2.5"/>
+              <circle cx="42" cy="18" r="5" fill="#1B365D"/>
+              <path d="M42 26 L42 78 L26 102" stroke="#1B365D" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+              <rect x="17" y="96" width="14" height="18" rx="3" transform="rotate(28 17 96)" fill="#4A6FA5" stroke="#1B365D" stroke-width="2"/>
+            </svg>
+
+            <div class="vinyl-disc-btn" id="vinylDisc" onclick="toggleMusic()" role="button" tabindex="0" aria-label="Включить или поставить на паузу музыку">
+              <div class="vinyl-label">
+                <span id="vinylLabelText">Нажми</span>
+                <div class="vinyl-spindle"></div>
+              </div>
+            </div>
+
+            <div class="vinyl-status-row">
+              <div class="eq-bars" id="vinylEqBars" aria-hidden="true">
+                <span class="eq-bar"></span>
+                <span class="eq-bar"></span>
+                <span class="eq-bar"></span>
+                <span class="eq-bar"></span>
+              </div>
+              <div class="vinyl-status" id="vinylStatusText">Нажми на пластинку, чтобы включить</div>
+            </div>
+
+            <div class="audio-controls-bar">
+              <button type="button" class="track-switch-btn" id="trackSwitchBtn" onclick="switchMusicTrack(event)" title="Переключить мелодию">
+                Трек 1: Праздничный бит
+              </button>
+              <label class="volume-control-wrap" title="Громкость музыки">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B365D" stroke-width="2.5">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                </svg>
+                <input type="range" id="volumeSlider" class="volume-slider" min="0.2" max="1.0" step="0.05" value="0.95" oninput="updateMusicVolume(this.value)" />
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-back-wrap">
+        <button class="btn-back" onclick="navigateTo('surprise')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          <span>Назад</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         ЭКРАН 6: ВИДЕОПОЗДРАВЛЕНИЕ («Видео»)
+         ====================================================================== -->
+    <section id="screen-video" class="screen bg-stationery">
+      <div class="video-stage-wrapper">
+        <div class="video-header-card anim-drop-down" style="animation-delay: 0.05s;">
+          <span class="video-kicker">Кадр 04 • Личное обращение</span>
+          <h2 class="video-main-heading" id="videoHeadingText">Видеопоздравление для Диаса</h2>
+        </div>
+
+        <div class="cinema-frame-card anim-slide-up" style="animation-delay: 0.16s;">
+          <div class="washi-tape tape-left"></div>
+          <div class="washi-tape tape-right"></div>
+
+          <!-- Верхняя перфорация киноплёнки -->
+          <div class="film-sprocket-bar" aria-hidden="true">
+            <span class="sprocket-hole"></span>
+            <span class="sprocket-hole"></span>
+            <span class="sprocket-hole"></span>
+            <span class="sprocket-hole"></span>
+            <span class="sprocket-hole"></span>
+            <span class="sprocket-hole"></span>
+            <span class="sprocket-hole"></span>
+            <span class="sprocket-hole"></span>
+            <span class="sprocket-hole"></span>
+            <span class="sprocket-hole"></span>
+          </div>
+
+          <!-- Экран видеоплеера -->
+          <div class="video-viewport" id="videoViewportContainer">
+            <div class="video-placeholder-box">
+              <svg width="56" height="56" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="8" y="18" width="48" height="36" rx="6" fill="#4A6FA5" stroke="#FCFBF9" stroke-width="2.5"/>
+                <polygon points="27,28 27,44 41,36" fill="#FCFBF9"/>
+              </svg>
+              <div class="video-placeholder-title">Загрузка видеопоздравления...</div>
+              <p class="video-placeholder-desc">
+                Если ты ещё не загрузил <b>video.mp4</b> в репозиторий GitHub, можешь выбрать видео с телефона прямо сейчас для проверки.
+              </p>
+              <button type="button" class="btn-pick-video" onclick="triggerLocalVideoSelect()">
+                📹 Выбрать видео с устройства
+              </button>
+            </div>
+          </div>
+
+          <!-- Нижняя перфорация киноплёнки -->
+          <div class="film-sprocket-bar bottom" aria-hidden="true">
+            <span class="sprocket-hole"></span>
+            <span class="sprocket-hole"></span>
+            <span class="sprocket-hole"></span>
+            <span class="sprocket-hole"></span>
+            <span class="sprocket-hole"></span>
+            <span class="sprocket-hole"></span>
+            <span class="sprocket-hole"></span>
+            <span class="sprocket-hole"></span>
+            <span class="sprocket-hole"></span>
+            <span class="sprocket-hole"></span>
+          </div>
+
+          <div class="video-footer-note">
+            <p class="video-handwritten-caption" id="videoCaptionText">
+              Смотри со звуком! Несколько тёплых слов специально для тебя, Диас.
+            </p>
+            <button type="button" class="btn-change-video-mini" onclick="triggerLocalVideoSelect()" title="Проверить другое видео с устройства">
+              Выбрать видео с телефона
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-back-wrap">
+        <button class="btn-back" onclick="navigateTo('surprise')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          <span>Назад</span>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    /* ========================================================================
+       НАСТРОЙКИ САЙТА (CONFIG) — ФОТО, ВИДЕО И ТЕКСТЫ ДЛЯ ДИАСА
+       ======================================================================== */
+    const CONFIG = {
+      photos: {
+        photo1: "photo1.jpg", // Первая рамка Polaroid (уже загружено в GitHub)
+        photo2: "photo2.jpg", // Вторая рамка Polaroid (уже загружено в GitHub)
+        photo3: "photo3.jpg"  // Овальная рамка-ЗЕРКАЛО (уже загружено в GitHub)
+      },
+      video: {
+        // Сюда вписывается имя видеофайла из GitHub (например "video.mp4")
+        // ИЛИ прямая ссылка на видео / YouTube / Google Диск
+        src: "video.mp4",
+        title: "Видеопоздравление для Диаса",
+        caption: "Смотри со звуком! Несколько тёплых слов специально для тебя, Диас."
+      },
+      texts: {
+        coverTitle: "С ДНЁМ РОЖДЕНИЯ,\nДИАС!",
+        letterHeading: "С Днём Рождения, Диас!",
+        letterParagraphs: [
+          "Диас, поздравляю тебя с днём рождения! Спасибо тебе за то, что всегда остаёшься надёжной опорой, примером и человеком, на которого можно положиться в любой ситуации.",
+          "Желаю тебе железного здоровья, мощной энергии и уверенности в каждом шаге. Пусть все цели, которые ты перед собой ставишь, достигаются без лишних преград, проекты приносят крутой результат, а рядом всегда будут верные люди.",
+          "Только вперёд и только вверх, Диас! С праздником!"
+        ],
+        bouquetText: "Обычные цветы быстро завянут, поэтому держи правильный букет! Пусть твой бюджет всегда растёт, доходы только умножаются, а финансов с запасом хватает на любые идеи, цели и мечты."
+      }
+    };
+
+    /* ========================================================================
+       1. НАВИГАЦИЯ МЕЖДУ ЭКРАНАМИ (SPA + КЛАВИАТУРА + ПЕРЕЗАПУСК АНИМАЦИЙ)
+       ======================================================================== */
+    const SCREEN_ORDER = ['cover', 'surprise', 'letter', 'bouquet', 'cake', 'video'];
+    let currentScreenId = 'cover';
+
+    let isIntroOpened = false;
+    function openIntroEnvelope() {
+      if (isIntroOpened) return;
+      isIntroOpened = true;
+      const overlay = document.getElementById('introOverlay');
+      if (!overlay) return;
+      overlay.classList.add('opening');
+      setTimeout(() => {
+        overlay.classList.add('opened');
+        animateCoverTitleLetters();
+      }, 420);
+    }
+
+    function animateCoverTitleLetters() {
+      const coverEl = document.getElementById('coverMainTitle');
+      if (!coverEl) return;
+      const rawLines = (CONFIG.texts.coverTitle || 'С ДНЁМ РОЖДЕНИЯ,\nДИАС!').split('\n');
+      let charIndex = 0;
+
+      coverEl.innerHTML = rawLines.map(line => {
+        const charsHtml = Array.from(line).map(ch => {
+          if (ch === ' ') return ' ';
+          const delay = (charIndex * 0.035).toFixed(3);
+          charIndex++;
+          return `<span class="char-pop" style="animation-delay: ${delay}s">${ch}</span>`;
+        }).join('');
+        return `<span style="display:inline-block">${charsHtml}</span>`;
+      }).join('<br>');
+    }
+
+    function replayScreenAnimations(screenEl) {
+      if (!screenEl) return;
+      const animatedNodes = screenEl.querySelectorAll('.anim-slide-up, .anim-slide-left, .anim-slide-right, .anim-drop-down');
+      animatedNodes.forEach(node => {
+        node.style.animation = 'none';
+        void node.offsetWidth;
+        node.style.animation = '';
+      });
+    }
+
+    function navigateTo(screenId) {
+      // Если уходим со вкладки видео — ставим видео на паузу
+      if (currentScreenId === 'video' && screenId !== 'video') {
+        const activeVid = document.getElementById('greetingVideoPlayer');
+        if (activeVid && !activeVid.paused) {
+          activeVid.pause();
+        }
+      }
+
+      currentScreenId = screenId;
+      document.querySelectorAll('.screen').forEach(sec => {
+        sec.classList.remove('active');
+      });
+
+      const targetScreen = document.getElementById('screen-' + screenId);
+      if (targetScreen) {
+        targetScreen.classList.add('active');
+        replayScreenAnimations(targetScreen);
+      }
+
+      if (screenId === 'cover') {
+        animateCoverTitleLetters();
+      }
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        if (btn.dataset.target === screenId) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+      const idx = SCREEN_ORDER.indexOf(currentScreenId);
+      if (e.key === 'ArrowRight' && idx < SCREEN_ORDER.length - 1) {
+        navigateTo(SCREEN_ORDER[idx + 1]);
+      } else if (e.key === 'ArrowLeft' && idx > 0) {
+        navigateTo(SCREEN_ORDER[idx - 1]);
+      }
+    });
+
+    /* ========================================================================
+       1.1. ИНИЦИАЛИЗАЦИЯ ВИДЕОПОЗДРАВЛЕНИЯ (GITHUB MP4 / YOUTUBE / GOOGLE DRIVE / ЛОКАЛЬНО)
+       ======================================================================== */
+    function parseEmbedVideoUrl(rawUrl) {
+      if (!rawUrl) return null;
+      const url = rawUrl.trim();
+
+      // YouTube (обычные ссылки и Shorts)
+      const ytMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+      if (ytMatch && ytMatch[1]) {
+        return `https://www.youtube.com/embed/${ytMatch[1]}?rel=0`;
+      }
+
+      // Google Drive
+      const gdMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+      if (gdMatch && gdMatch[1]) {
+        return `https://drive.google.com/file/d/${gdMatch[1]}/preview`;
+      }
+
+      return null;
+    }
+
+    function buildVideoCandidateUrls(primarySrc) {
+      if (!primarySrc) return [];
+      if (primarySrc.startsWith('blob:') || primarySrc.startsWith('data:') || primarySrc.startsWith('http://') || primarySrc.startsWith('https://')) {
+        return [primarySrc];
+      }
+      const dotIdx = primarySrc.lastIndexOf('.');
+      if (dotIdx === -1) return [primarySrc];
+
+      const base = primarySrc.slice(0, dotIdx);
+      const ext = primarySrc.slice(dotIdx);
+      return [...new Set([
+        primarySrc,
+        base + ext.toUpperCase(),
+        base + '.mp4',
+        base + '.MP4',
+        base + '.mov',
+        base + '.MOV',
+        base + '.webm'
+      ])];
+    }
+
+    function showVideoPlaceholder() {
+      const container = document.getElementById('videoViewportContainer');
+      if (!container) return;
+      container.innerHTML = `
+        <div class="video-placeholder-box">
+          <svg width="58" height="58" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="8" y="18" width="48" height="36" rx="6" fill="#4A6FA5" stroke="#FCFBF9" stroke-width="2.5"/>
+            <polygon points="27,28 27,44 41,36" fill="#FCFBF9"/>
+          </svg>
+          <div class="video-placeholder-title">Здесь будет твоё видеопоздравление</div>
+          <p class="video-placeholder-desc">
+            Загрузи видео в репозиторий GitHub под именем <b>video.mp4</b> (рядом с index.html) — и оно появится здесь автоматически! А прямо сейчас можешь выбрать видео с телефона для проверки:
+          </p>
+          <button type="button" class="btn-pick-video" onclick="triggerLocalVideoSelect()">
+            📹 Выбрать видео с телефона
+          </button>
+        </div>
+      `;
+    }
+
+    function mountHtml5VideoFromCandidates(candidates, index = 0) {
+      const container = document.getElementById('videoViewportContainer');
+      if (!container) return;
+
+      if (!candidates || index >= candidates.length) {
+        showVideoPlaceholder();
+        return;
+      }
+
+      const videoEl = document.createElement('video');
+      videoEl.id = 'greetingVideoPlayer';
+      videoEl.src = candidates[index];
+      videoEl.controls = true;
+      videoEl.playsInline = true;
+      videoEl.preload = 'metadata';
+
+      // Если включена виниловая пластинка — ставим её на паузу при запуске видео
+      videoEl.addEventListener('play', () => {
+        if (isPlayingMusic) {
+          toggleMusic();
+        }
+      });
+
+      videoEl.addEventListener('loadedmetadata', () => {
+        container.innerHTML = '';
+        container.appendChild(videoEl);
+      });
+
+      videoEl.addEventListener('error', () => {
+        mountHtml5VideoFromCandidates(candidates, index + 1);
+      });
+    }
+
+    function initGreetingVideo() {
+      const headingEl = document.getElementById('videoHeadingText');
+      const captionEl = document.getElementById('videoCaptionText');
+      if (headingEl && CONFIG.video.title) headingEl.textContent = CONFIG.video.title;
+      if (captionEl && CONFIG.video.caption) captionEl.textContent = CONFIG.video.caption;
+
+      const rawSrc = (CONFIG.video.src || '').trim();
+      if (!rawSrc) {
+        showVideoPlaceholder();
+        return;
+      }
+
+      const embedUrl = parseEmbedVideoUrl(rawSrc);
+      if (embedUrl) {
+        const container = document.getElementById('videoViewportContainer');
+        if (container) {
+          container.innerHTML = `<iframe src="${embedUrl}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="Видеопоздравление для Диаса"></iframe>`;
+        }
+        return;
+      }
+
+      const candidates = buildVideoCandidateUrls(rawSrc);
+      mountHtml5VideoFromCandidates(candidates, 0);
+    }
+
+    function triggerLocalVideoSelect() {
+      const input = document.getElementById('videoFileInput');
+      if (!input) return;
+      input.value = '';
+      input.click();
+    }
+
+    document.getElementById('videoFileInput').addEventListener('change', function (event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      const blobUrl = URL.createObjectURL(file);
+      mountHtml5VideoFromCandidates([blobUrl], 0);
+      showToast('Видео загружено для просмотра! Чтобы оно открывалось у брата, загрузи его в GitHub как video.mp4');
+    });
+
+    /* ========================================================================
+       1.2. ПАСХАЛКА НА ДЕНЕЖНОМ БУКЕТЕ: КЛИКИ -> ТЕСТ НА ТУРЕЦКОМ -> 25 000 ТГ / ДЕПОРТАЦИЯ
+       ======================================================================== */
+    let bouquetClickCount = 0;
+    const BOUQUET_TAPS_REQUIRED = 5;
+
+    function handleBouquetClick() {
+      const bouquetSvg = document.getElementById('moneyBouquetSvg');
+      const hintBadge = document.getElementById('bouquetHintBadge');
+
+      if (bouquetSvg) {
+        bouquetSvg.classList.remove('bouquet-tap-burst');
+        void bouquetSvg.offsetWidth;
+        bouquetSvg.classList.add('bouquet-tap-burst');
+        setTimeout(() => {
+          bouquetSvg.classList.remove('bouquet-tap-burst');
+        }, 300);
+      }
+
+      bouquetClickCount++;
+      const remaining = BOUQUET_TAPS_REQUIRED - bouquetClickCount;
+
+      if (remaining > 0) {
+        if (hintBadge) {
+          hintBadge.innerHTML = `<span>👆 Ещё ${remaining} ${remaining === 1 ? 'нажатие' : 'нажатия'}...</span>`;
+        }
+      } else {
+        bouquetClickCount = 0;
+        if (hintBadge) {
+          hintBadge.innerHTML = `<span>👆 Нажми на букет несколько раз</span>`;
+        }
+        openTurkishQuiz();
+      }
+    }
+
+    function openTurkishQuiz() {
+      const overlay = document.getElementById('turkishQuizOverlay');
+      const questionStep = document.getElementById('quizQuestionStep');
+      const rewardStep = document.getElementById('quizRewardStep');
+
+      if (questionStep) questionStep.style.display = 'block';
+      if (rewardStep) rewardStep.style.display = 'none';
+      if (overlay) overlay.classList.add('open');
+    }
+
+    function closeTurkishQuiz() {
+      const overlay = document.getElementById('turkishQuizOverlay');
+      if (overlay) overlay.classList.remove('open');
+    }
+
+    function answerTurkishQuiz(isCorrect) {
+      if (isCorrect) {
+        const questionStep = document.getElementById('quizQuestionStep');
+        const rewardStep = document.getElementById('quizRewardStep');
+        if (questionStep) questionStep.style.display = 'none';
+        if (rewardStep) rewardStep.style.display = 'flex';
+      } else {
+        closeTurkishQuiz();
+        const deportOverlay = document.getElementById('deportationOverlay');
+        if (deportOverlay) deportOverlay.classList.add('open');
+      }
+    }
+
+    function closeDeportationOverlay() {
+      const deportOverlay = document.getElementById('deportationOverlay');
+      if (deportOverlay) deportOverlay.classList.remove('open');
+      navigateTo('bouquet');
+    }
+
+    /* ========================================================================
+       2. ВСПЛЫВАЮЩЕЕ УВЕДОМЛЕНИЕ
+       ======================================================================== */
+    let toastTimeout = null;
+    function showToast(message) {
+      const banner = document.getElementById('toastBanner');
+      banner.textContent = message;
+      banner.classList.add('show');
+
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        banner.classList.remove('show');
+      }, 3400);
+    }
+
+    /* ========================================================================
+       3. РАБОТА С ФОТОГРАФИЯМИ (УМНЫЙ АВТОПОДБОР ДЛЯ GITHUB + LOCALSTORAGE + ЭКСПОРТ)
+       ======================================================================== */
+    let activePhotoSlotKey = null;
+    const STORAGE_PREFIX = 'dias_card_photo_';
+
+    function buildCandidateUrls(primarySrc) {
+      if (!primarySrc) return [];
+      if (primarySrc.startsWith('data:') || primarySrc.startsWith('http://') || primarySrc.startsWith('https://')) {
+        return [primarySrc];
+      }
+      const dotIndex = primarySrc.lastIndexOf('.');
+      if (dotIndex === -1) return [primarySrc];
+
+      const base = primarySrc.slice(0, dotIndex);
+      const ext = primarySrc.slice(dotIndex);
+      const variants = [
+        primarySrc,
+        base + ext.toUpperCase(),
+        base + '.jpg',
+        base + '.JPG',
+        base + '.jpeg',
+        base + '.JPEG',
+        base + '.png',
+        base + '.PNG'
+      ];
+      return [...new Set(variants)];
+    }
+
+    function renderPhotoFromCandidates(slotKey, candidates, index = 0) {
+      if (!candidates || index >= candidates.length) return;
+      const container = document.getElementById('slot-' + slotKey);
+      if (!container) return;
+
+      const img = document.createElement('img');
+      img.src = candidates[index];
+      img.alt = slotKey === 'photo3' ? 'Детское фото Диаса' : 'Фото с Диасом';
+
+      img.onload = function () {
+        container.innerHTML = '';
+        container.appendChild(img);
+      };
+
+      img.onerror = function () {
+        renderPhotoFromCandidates(slotKey, candidates, index + 1);
+      };
+    }
+
+    function initPhotosAndTexts() {
+      const coverEl = document.getElementById('coverMainTitle');
+      if (coverEl && CONFIG.texts.coverTitle) {
+        coverEl.innerHTML = CONFIG.texts.coverTitle.replace(/\n/g, '<br>');
+      }
+
+      const letterHeadingEl = document.getElementById('letterHeadingText');
+      if (letterHeadingEl && CONFIG.texts.letterHeading) {
+        letterHeadingEl.textContent = CONFIG.texts.letterHeading;
+      }
+
+      const letterBodyEl = document.getElementById('letterBodyContainer');
+      if (letterBodyEl && Array.isArray(CONFIG.texts.letterParagraphs)) {
+        letterBodyEl.innerHTML = CONFIG.texts.letterParagraphs
+          .map(text => `<p>${text}</p>`)
+          .join('');
+      }
+
+      const bouquetTextEl = document.getElementById('bouquetTextContent');
+      if (bouquetTextEl && CONFIG.texts.bouquetText) {
+        bouquetTextEl.textContent = CONFIG.texts.bouquetText;
+      }
+
+      ['photo1', 'photo2', 'photo3'].forEach(key => {
+        let savedDataUrl = '';
+        try {
+          savedDataUrl = localStorage.getItem(STORAGE_PREFIX + key) || '';
+        } catch (err) {
+          savedDataUrl = '';
+        }
+
+        const configUrl = (CONFIG.photos[key] || '').trim();
+        const candidateList = [];
+
+        if (savedDataUrl) {
+          candidateList.push(savedDataUrl);
+        }
+        if (configUrl) {
+          candidateList.push(...buildCandidateUrls(configUrl));
+        }
+
+        if (candidateList.length > 0) {
+          renderPhotoFromCandidates(key, candidateList, 0);
+        }
+      });
+    }
+
+    function triggerPhotoUpload(slotKey) {
+      activePhotoSlotKey = slotKey;
+      const input = document.getElementById('photoFileInput');
+      input.value = '';
+      input.click();
+    }
+
+    document.getElementById('photoFileInput').addEventListener('change', function (event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file || !activePhotoSlotKey) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const tempImg = new Image();
+        tempImg.onload = function () {
+          const maxSide = 720;
+          let width = tempImg.width;
+          let height = tempImg.height;
+
+          if (width > maxSide || height > maxSide) {
+            if (width > height) {
+              height = Math.round((height * maxSide) / width);
+              width = maxSide;
+            } else {
+              width = Math.round((width * maxSide) / height);
+              height = maxSide;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(tempImg, 0, 0, width, height);
+
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+          renderPhotoFromCandidates(activePhotoSlotKey, [compressedDataUrl], 0);
+
+          try {
+            localStorage.setItem(STORAGE_PREFIX + activePhotoSlotKey, compressedDataUrl);
+            showToast('Фото добавлено! Чтобы оно появилось на других телефонах, зажми «ДИАС» вверху');
+          } catch (err) {
+            showToast('Фото добавлено в рамку');
+          }
+        };
+        tempImg.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    /* ========================================================================
+       3.1. ЭКСПОРТ ГОТОВОГО INDEX.HTML СО ВШИТЫМИ ФОТОГРАФИЯМИ
+       ======================================================================== */
+    function openExportModal() {
+      const listEl = document.getElementById('exportPhotoStatusList');
+      if (listEl) {
+        const labels = {
+          photo1: 'Фото 1 (Polaroid сверху)',
+          photo2: 'Фото 2 (Polaroid снизу)',
+          photo3: 'Фото 3 (Детское в зеркале)'
+        };
+        listEl.innerHTML = ['photo1', 'photo2', 'photo3'].map(k => {
+          const hasLocal = !!(localStorage.getItem(STORAGE_PREFIX + k) || (CONFIG.photos[k] || '').startsWith('data:'));
+          return `<div>${hasLocal ? '✅' : '⚠️'} ${labels[k]}: ${hasLocal ? 'готово к вшиванию в код' : 'используется файл из GitHub'}</div>`;
+        }).join('');
+      }
+      document.getElementById('exportModalOverlay').classList.add('open');
+    }
+
+    function closeExportModal() {
+      document.getElementById('exportModalOverlay').classList.remove('open');
+    }
+
+    async function downloadEmbeddedHtml() {
+      const p1 = localStorage.getItem(STORAGE_PREFIX + 'photo1') || CONFIG.photos.photo1;
+      const p2 = localStorage.getItem(STORAGE_PREFIX + 'photo2') || CONFIG.photos.photo2;
+      const p3 = localStorage.getItem(STORAGE_PREFIX + 'photo3') || CONFIG.photos.photo3;
+
+      let rawHtml = '';
+      try {
+        const res = await fetch(window.location.href.split('?')[0], { cache: 'no-store' });
+        if (res.ok) {
+          rawHtml = await res.text();
+        }
+      } catch (e) {
+        rawHtml = '';
+      }
+
+      if (!rawHtml) {
+        rawHtml = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+        rawHtml = rawHtml.replace(/class="intro-envelope-overlay[^"]*"/, 'class="intro-envelope-overlay"');
+        rawHtml = rawHtml.replace(/class="export-modal-overlay[^"]*"/, 'class="export-modal-overlay"');
+      }
+
+      const newPhotosBlock = `photos: {\n        photo1: ${JSON.stringify(p1)},\n        photo2: ${JSON.stringify(p2)},\n        photo3: ${JSON.stringify(p3)}\n      }`;
+      const updatedHtml = rawHtml.replace(/photos:\s*\{[\s\S]*?\}/, newPhotosBlock);
+
+      const blob = new Blob([updatedHtml], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'index.html';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+
+      closeExportModal();
+      showToast('Готовый index.html скачан! Загрузи его в GitHub');
+    }
+
+    (function setupAdminExportTrigger() {
+      const brandBtn = document.getElementById('navBrandTrigger');
+      let holdTimer = null;
+
+      if (brandBtn) {
+        const startHold = () => {
+          holdTimer = setTimeout(() => {
+            openExportModal();
+          }, 1500);
+        };
+        const cancelHold = () => {
+          if (holdTimer) clearTimeout(holdTimer);
+        };
+        brandBtn.addEventListener('touchstart', startHold, { passive: true });
+        brandBtn.addEventListener('touchend', cancelHold);
+        brandBtn.addEventListener('touchmove', cancelHold);
+        brandBtn.addEventListener('mousedown', startHold);
+        brandBtn.addEventListener('mouseup', cancelHold);
+        brandBtn.addEventListener('mouseleave', cancelHold);
+      }
+
+      if (window.location.search.includes('edit=1')) {
+        window.addEventListener('DOMContentLoaded', () => {
+          setTimeout(openExportModal, 1400);
+        });
+      }
+    })();
+
+    /* ========================================================================
+       4. ЭПИЧНОЕ ЗАДУВАНИЕ СВЕЧЕЙ: БУМАЖНОЕ КОНФЕТТИ + ФАНФАРЫ + БАННЕР
+       ======================================================================== */
+    let areCandlesBlownOut = false;
+
+    function launchPaperConfettiBurst() {
+      const layer = document.getElementById('cakeConfettiLayer');
+      if (!layer) return;
+
+      const palette = ['#1B365D', '#4A6FA5', '#8DA9C4', '#D5C3AA', '#E07A5F', '#FCFBF9'];
+      const totalPieces = 56;
+
+      for (let i = 0; i < totalPieces; i++) {
+        const piece = document.createElement('span');
+        piece.className = 'paper-confetti-piece';
+
+        const fromLeft = i % 2 === 0;
+        const startX = fromLeft ? (18 + Math.random() * 24) : (58 + Math.random() * 24);
+        const startY = 34 + Math.random() * 18;
+
+        const tx1 = (fromLeft ? 1 : -1) * (30 + Math.random() * 140);
+        const ty1 = -(110 + Math.random() * 150);
+        const tx2 = tx1 + (Math.random() - 0.5) * 180;
+        const ty2 = 240 + Math.random() * 260;
+        const dur = (1.8 + Math.random() * 1.1).toFixed(2) + 's';
+
+        piece.style.left = startX + 'vw';
+        piece.style.top = startY + 'vh';
+        piece.style.backgroundColor = palette[i % palette.length];
+        piece.style.border = '1px solid rgba(27, 54, 93, 0.25)';
+        piece.style.setProperty('--tx1', tx1.toFixed(0) + 'px');
+        piece.style.setProperty('--ty1', ty1.toFixed(0) + 'px');
+        piece.style.setProperty('--tx2', tx2.toFixed(0) + 'px');
+        piece.style.setProperty('--ty2', ty2.toFixed(0) + 'px');
+        piece.style.setProperty('--dur', dur);
+
+        layer.appendChild(piece);
+        setTimeout(() => piece.remove(), 3100);
+      }
+    }
+
+    function playCelebrationFanfare() {
+      ensureAudioEngine();
+      const now = audioCtx.currentTime;
+
+      const blowLen = Math.floor(audioCtx.sampleRate * 0.26);
+      const blowBuf = audioCtx.createBuffer(1, blowLen, audioCtx.sampleRate);
+      const blowData = blowBuf.getChannelData(0);
+      for (let i = 0; i < blowLen; i++) {
+        blowData[i] = (Math.random() * 2 - 1) * Math.sin((i / blowLen) * Math.PI);
+      }
+      const blowSrc = audioCtx.createBufferSource();
+      blowSrc.buffer = blowBuf;
+      const blowFilter = audioCtx.createBiquadFilter();
+      blowFilter.type = 'lowpass';
+      blowFilter.frequency.setValueAtTime(620, now);
+      const blowGain = audioCtx.createGain();
+      blowGain.gain.setValueAtTime(0.35, now);
+      blowGain.gain.exponentialRampToValueAtTime(0.001, now + 0.26);
+      blowSrc.connect(blowFilter);
+      blowFilter.connect(blowGain);
+      blowGain.connect(compressorNode);
+      blowSrc.start(now);
+
+      const fanfareNotes = [
+        { freq: 523.25, delay: 0.14, dur: 0.22 },
+        { freq: 659.25, delay: 0.26, dur: 0.22 },
+        { freq: 783.99, delay: 0.38, dur: 0.24 },
+        { freq: 1046.50, delay: 0.50, dur: 0.65 }
+      ];
+
+      fanfareNotes.forEach(n => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(n.freq, now + n.delay);
+
+        gain.gain.setValueAtTime(0.001, now + n.delay);
+        gain.gain.linearRampToValueAtTime(0.32, now + n.delay + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + n.delay + n.dur);
+
+        osc.connect(gain);
+        gain.connect(compressorNode);
+        osc.start(now + n.delay);
+        osc.stop(now + n.delay + n.dur + 0.04);
+      });
+    }
+
+    function toggleCandles() {
+      const cakeEl = document.getElementById('interactiveCake');
+      const cardEl = document.getElementById('cakeCenterCard');
+      const btnEl = document.getElementById('blowCandlesBtn');
+      const iconEl = document.getElementById('blowCandlesIcon');
+      const labelEl = document.getElementById('blowCandlesLabel');
+
+      areCandlesBlownOut = !areCandlesBlownOut;
+
+      if (areCandlesBlownOut) {
+        cakeEl.classList.add('candles-out');
+        if (cardEl) cardEl.classList.add('wish-granted');
+        if (btnEl) btnEl.classList.add('relight-mode');
+        if (iconEl) iconEl.textContent = '🔥';
+        if (labelEl) labelEl.textContent = 'Зажечь свечи снова';
+
+        launchPaperConfettiBurst();
+        playCelebrationFanfare();
+        showToast('Свечи задуты! Пусть сбудется всё задуманное, Диас!');
+      } else {
+        cakeEl.classList.remove('candles-out');
+        if (cardEl) cardEl.classList.remove('wish-granted');
+        if (btnEl) btnEl.classList.remove('relight-mode');
+        if (iconEl) iconEl.textContent = '💨';
+        if (labelEl) labelEl.textContent = 'Задуть свечи и загадать желание';
+      }
+    }
+
+    /* ========================================================================
+       5. ГРОМКИЙ МНОГОДОРОЖЕЧНЫЙ СИНТЕЗАТОР (АККОРДЫ + БАС + МЕЛОДИЯ + РИТМ)
+       ======================================================================== */
+    let audioCtx = null;
+    let masterGainNode = null;
+    let compressorNode = null;
+    let isPlayingMusic = false;
+    let stepTimer = null;
+    let notesVisualTimer = null;
+    let currentStepIndex = 0;
+    let currentTrackIndex = 0;
+    let masterVolumeLevel = 0.95;
+
+    const MUSIC_TRACKS = [
+      {
+        name: "Трек 1: Праздничный бит",
+        stepMs: 210,
+        steps: [
+          { lead: 523.25, chord: [261.63, 329.63, 392.00], bass: 130.81, kick: true },
+          { hat: true },
+          { lead: 659.25, hat: true },
+          { lead: 783.99, bass: 130.81 },
+          { lead: 659.25, chord: [261.63, 329.63, 392.00], snare: true },
+          { hat: true },
+          { lead: 587.33, hat: true },
+          { lead: 523.25, bass: 164.81 },
+
+          { lead: 587.33, chord: [246.94, 293.66, 392.00], bass: 98.00, kick: true },
+          { hat: true },
+          { lead: 783.99, hat: true },
+          { lead: 880.00, bass: 98.00 },
+          { lead: 783.99, chord: [246.94, 293.66, 392.00], snare: true },
+          { hat: true },
+          { lead: 659.25, hat: true },
+          { lead: 587.33, bass: 123.47 },
+
+          { lead: 659.25, chord: [220.00, 261.63, 329.63, 392.00], bass: 110.00, kick: true },
+          { hat: true },
+          { lead: 783.99, hat: true },
+          { lead: 880.00, bass: 110.00 },
+          { lead: 1046.50, chord: [220.00, 261.63, 329.63], snare: true },
+          { hat: true },
+          { lead: 880.00, hat: true },
+          { lead: 783.99, bass: 130.81 },
+
+          { lead: 698.46, chord: [220.00, 261.63, 349.23], bass: 87.31, kick: true },
+          { hat: true },
+          { lead: 880.00, hat: true },
+          { lead: 783.99, bass: 98.00 },
+          { lead: 659.25, chord: [246.94, 293.66, 392.00], snare: true, kick: true },
+          { hat: true },
+          { lead: 587.33, hat: true },
+          { lead: 523.25, bass: 130.81 }
+        ]
+      },
+      {
+        name: "Трек 2: Happy Birthday Remix",
+        stepMs: 240,
+        steps: [
+          { lead: 392.00, bass: 130.81, hat: true },
+          { lead: 392.00, hat: true },
+          { lead: 440.00, chord: [261.63, 329.63, 392.00], bass: 130.81, kick: true },
+          { hat: true },
+          { lead: 392.00, snare: true },
+          { hat: true },
+          { lead: 523.25, chord: [261.63, 329.63, 392.00], bass: 164.81, kick: true },
+          { hat: true },
+          { lead: 493.88, chord: [246.94, 293.66, 392.00], bass: 98.00, snare: true },
+          { hat: true },
+          { hat: true },
+          { bass: 98.00 },
+
+          { lead: 392.00, hat: true },
+          { lead: 392.00, hat: true },
+          { lead: 440.00, chord: [246.94, 293.66, 392.00], bass: 98.00, kick: true },
+          { hat: true },
+          { lead: 392.00, snare: true },
+          { hat: true },
+          { lead: 587.33, chord: [246.94, 293.66, 392.00], bass: 146.83, kick: true },
+          { hat: true },
+          { lead: 523.25, chord: [261.63, 329.63, 392.00], bass: 130.81, snare: true },
+          { hat: true },
+          { hat: true },
+          { bass: 130.81 },
+
+          { lead: 392.00, hat: true },
+          { lead: 392.00, hat: true },
+          { lead: 783.99, chord: [261.63, 329.63, 392.00], bass: 130.81, kick: true },
+          { hat: true },
+          { lead: 659.25, snare: true },
+          { hat: true },
+          { lead: 523.25, chord: [220.00, 261.63, 349.23], bass: 87.31, kick: true },
+          { hat: true },
+          { lead: 493.88, snare: true },
+          { hat: true },
+          { lead: 440.00, bass: 87.31, kick: true },
+          { hat: true },
+
+          { lead: 698.46, hat: true },
+          { lead: 698.46, hat: true },
+          { lead: 659.25, chord: [220.00, 261.63, 349.23], bass: 87.31, kick: true },
+          { hat: true },
+          { lead: 523.25, snare: true },
+          { hat: true },
+          { lead: 587.33, chord: [246.94, 293.66, 392.00], bass: 98.00, kick: true },
+          { hat: true },
+          { lead: 523.25, chord: [261.63, 329.63, 392.00], bass: 130.81, snare: true, kick: true },
+          { hat: true },
+          { hat: true },
+          { hat: true }
+        ]
+      }
+    ];
+
+    function ensureAudioEngine() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContextClass();
+
+        compressorNode = audioCtx.createDynamicsCompressor();
+        compressorNode.threshold.setValueAtTime(-16, audioCtx.currentTime);
+        compressorNode.knee.setValueAtTime(12, audioCtx.currentTime);
+        compressorNode.ratio.setValueAtTime(4, audioCtx.currentTime);
+        compressorNode.attack.setValueAtTime(0.005, audioCtx.currentTime);
+        compressorNode.release.setValueAtTime(0.18, audioCtx.currentTime);
+
+        masterGainNode = audioCtx.createGain();
+        masterGainNode.gain.setValueAtTime(masterVolumeLevel * 1.45, audioCtx.currentTime);
+
+        compressorNode.connect(masterGainNode);
+        masterGainNode.connect(audioCtx.destination);
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function updateMusicVolume(val) {
+      masterVolumeLevel = parseFloat(val);
+      if (masterGainNode && audioCtx) {
+        masterGainNode.gain.setTargetAtTime(masterVolumeLevel * 1.45, audioCtx.currentTime, 0.03);
+      }
+    }
+
+    function switchMusicTrack(event) {
+      if (event) event.stopPropagation();
+      currentTrackIndex = (currentTrackIndex + 1) % MUSIC_TRACKS.length;
+      currentStepIndex = 0;
+      const btn = document.getElementById('trackSwitchBtn');
+      if (btn) btn.textContent = MUSIC_TRACKS[currentTrackIndex].name;
+
+      if (isPlayingMusic) {
+        if (stepTimer) clearTimeout(stepTimer);
+        scheduleNextMusicStep();
+        showToast('Включён ' + MUSIC_TRACKS[currentTrackIndex].name);
+      }
+    }
+
+    function triggerLeadVoice(freq, durSec) {
+      const now = audioCtx.currentTime;
+      const osc1 = audioCtx.createOscillator();
+      const osc2 = audioCtx.createOscillator();
+      const filter = audioCtx.createBiquadFilter();
+      const gain = audioCtx.createGain();
+
+      osc1.type = 'triangle';
+      osc1.frequency.setValueAtTime(freq, now);
+
+      osc2.type = 'sawtooth';
+      osc2.frequency.setValueAtTime(freq * 1.003, now);
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(2200, now);
+      filter.frequency.exponentialRampToValueAtTime(900, now + durSec);
+
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.linearRampToValueAtTime(0.32, now + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + durSec);
+
+      osc1.connect(filter);
+      osc2.connect(filter);
+      filter.connect(gain);
+      gain.connect(compressorNode);
+
+      osc1.start(now);
+      osc2.start(now);
+      osc1.stop(now + durSec + 0.03);
+      osc2.stop(now + durSec + 0.03);
+    }
+
+    function triggerChordPad(freqs, durSec) {
+      const now = audioCtx.currentTime;
+      freqs.forEach(f => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(f, now);
+
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.linearRampToValueAtTime(0.11, now + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + durSec);
+
+        osc.connect(gain);
+        gain.connect(compressorNode);
+        osc.start(now);
+        osc.stop(now + durSec + 0.04);
+      });
+    }
+
+    function triggerBassVoice(freq, durSec) {
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, now);
+
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.linearRampToValueAtTime(0.36, now + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + durSec);
+
+      osc.connect(gain);
+      gain.connect(compressorNode);
+      osc.start(now);
+      osc.stop(now + durSec + 0.03);
+    }
+
+    function triggerDrumVoice(type) {
+      const now = audioCtx.currentTime;
+      if (type === 'kick') {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(135, now);
+        osc.frequency.exponentialRampToValueAtTime(42, now + 0.12);
+
+        gain.gain.setValueAtTime(0.45, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+
+        osc.connect(gain);
+        gain.connect(compressorNode);
+        osc.start(now);
+        osc.stop(now + 0.15);
+      } else {
+        const bufferSize = Math.floor(audioCtx.sampleRate * (type === 'snare' ? 0.11 : 0.045));
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = Math.random() * 2 - 1;
+        }
+
+        const noise = audioCtx.createBufferSource();
+        noise.buffer = buffer;
+
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = type === 'snare' ? 'bandpass' : 'highpass';
+        filter.frequency.setValueAtTime(type === 'snare' ? 1400 : 6500, now);
+
+        const gain = audioCtx.createGain();
+        gain.gain.setValueAtTime(type === 'snare' ? 0.18 : 0.06, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + (type === 'snare' ? 0.11 : 0.045));
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(compressorNode);
+        noise.start(now);
+      }
+    }
+
+    function scheduleNextMusicStep() {
+      if (!isPlayingMusic) return;
+
+      const track = MUSIC_TRACKS[currentTrackIndex];
+      const step = track.steps[currentStepIndex];
+      const stepSec = track.stepMs / 1000;
+
+      if (step.lead) triggerLeadVoice(step.lead, stepSec * 1.45);
+      if (step.chord) triggerChordPad(step.chord, stepSec * 3.2);
+      if (step.bass) triggerBassVoice(step.bass, stepSec * 1.6);
+      if (step.kick) triggerDrumVoice('kick');
+      if (step.snare) triggerDrumVoice('snare');
+      if (step.hat) triggerDrumVoice('hat');
+
+      currentStepIndex = (currentStepIndex + 1) % track.steps.length;
+      stepTimer = setTimeout(scheduleNextMusicStep, track.stepMs);
+    }
+
+    function spawnFloatingNote() {
+      const layer = document.getElementById('musicNotesLayer');
+      if (!layer) return;
+
+      const symbols = ['♪', '♫', '♩'];
+      const noteEl = document.createElement('span');
+      noteEl.className = 'floating-note';
+      noteEl.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+
+      const startLeft = 32 + Math.random() * 34;
+      const driftX = (Math.random() - 0.5) * 44;
+
+      noteEl.style.left = startLeft + '%';
+      noteEl.style.bottom = '36%';
+      noteEl.style.setProperty('--dx', driftX + 'px');
+
+      layer.appendChild(noteEl);
+      setTimeout(() => noteEl.remove(), 1800);
+    }
+
+    function toggleMusic() {
+      const discEl = document.getElementById('vinylDisc');
+      const tonearmEl = document.getElementById('vinylTonearm');
+      const eqBarsEl = document.getElementById('vinylEqBars');
+      const labelEl = document.getElementById('vinylLabelText');
+      const statusEl = document.getElementById('vinylStatusText');
+
+      if (!isPlayingMusic) {
+        ensureAudioEngine();
+
+        isPlayingMusic = true;
+        tonearmEl.classList.add('engaged');
+        discEl.classList.add('spinning');
+        if (eqBarsEl) eqBarsEl.classList.add('playing');
+        labelEl.textContent = 'Пауза';
+        statusEl.textContent = 'Играет музыка для Диаса';
+
+        setTimeout(() => {
+          if (isPlayingMusic) {
+            scheduleNextMusicStep();
+            spawnFloatingNote();
+            notesVisualTimer = setInterval(spawnFloatingNote, 620);
+          }
+        }, 250);
+      } else {
+        isPlayingMusic = false;
+        tonearmEl.classList.remove('engaged');
+        discEl.classList.remove('spinning');
+        if (eqBarsEl) eqBarsEl.classList.remove('playing');
+        labelEl.textContent = 'Нажми';
+        statusEl.textContent = 'Пластинка на паузе';
+
+        if (stepTimer) clearTimeout(stepTimer);
+        if (notesVisualTimer) clearInterval(notesVisualTimer);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initPhotosAndTexts();
+      initGreetingVideo();
+      setTimeout(openIntroEnvelope, 1100);
+    });
+  </script>
+</body>
+</html>
+```
